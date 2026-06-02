@@ -5,30 +5,23 @@ const Order  = require('../models/Order');
 const Beat   = require('../models/Beat');
 const { authUser } = require('../middleware/auth');
 
-// GET /api/downloads/:beatId — user must have confirmed order for this beat
 router.get('/:beatId', authUser, async (req, res) => {
   try {
     const order = await Order.findOne({
-      user:           req.user.id,
-      'items.beat':   req.params.beatId,
-      status:         'confirmed'
+      user:   req.user.id,
+      status: 'confirmed',
+      'items.beat': req.params.beatId
     });
-
-    if (!order)
-      return res.status(403).json({ error: 'Purchase required to download this file.' });
+    if (!order) return res.status(403).json({ error: 'No confirmed order for this beat' });
 
     const beat = await Beat.findById(req.params.beatId);
-    if (!beat || !beat.beatFile)
-      return res.status(404).json({ error: 'File not found. Contact support.' });
+    if (!beat?.beatFile) return res.status(404).json({ error: 'File not found' });
 
-    const filePath = path.resolve(`uploads/beats/${beat.beatFile}`);
-    if (!fs.existsSync(filePath))
-      return res.status(404).json({ error: 'File missing on server. Contact support.' });
+    const filePath = path.join(__dirname, '../uploads/beats', beat.beatFile);
+    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File missing on server' });
 
-    res.download(filePath, `${beat.name}.${path.extname(beat.beatFile).slice(1)}`);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    res.download(filePath, beat.beatFile);
+  } catch(err) { res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;

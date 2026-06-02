@@ -1,7 +1,6 @@
 {
   "name": "shuki-production",
   "version": "1.0.0",
-  "description": "Shuki Production - Beat Store",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

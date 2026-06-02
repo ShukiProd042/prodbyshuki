@@ -1,232 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Shuki Production — Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-  <style>
-    :root{
-      --bg:#080808;--surface:#101010;--surface2:#181818;--border:#1e1e1e;
-      --accent:#ff3c00;--gold:#c9a84c;--green:#00c864;--red:#ff3c00;--blue:#4488ff;
-      --text:#f0ece3;--muted:#666;
-      --fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
-      --sidebar:240px;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg);color:var(--text);font-family:var(--fb);display:flex;min-height:100vh;overflow-x:hidden}
-
-    /* ── LOGIN ── */
-    #loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
-    .login-box{background:var(--surface);border:1px solid var(--border);padding:3rem;width:400px;border-radius:4px}
-    .login-logo{font-family:var(--fd);font-size:2rem;letter-spacing:4px;margin-bottom:.25rem}.login-logo span{color:var(--accent)}
-    .login-sub{font-family:var(--fm);font-size:.6rem;letter-spacing:3px;color:var(--muted);margin-bottom:2.5rem}
-
-    /* ── FORMS ── */
-    .fg{margin-bottom:1rem}
-    .fg label{display:block;font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
-    .fg input,.fg select,.fg textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem;border-radius:2px;font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .2s}
-    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent)}
-    .fg textarea{resize:vertical;min-height:80px}
-    .ferr{color:var(--accent);font-size:.8rem;margin-top:.5rem;display:none}
-
-    /* ── BUTTONS ── */
-    .btn{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;border:none;font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border-radius:2px;transition:all .2s;padding:.6rem 1.2rem}
-    .btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{background:#ff5722}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}.btn-ghost:hover{color:var(--text);border-color:#444}
-    .btn-green{background:rgba(0,200,100,.15);color:var(--green);border:1px solid rgba(0,200,100,.3)}.btn-green:hover{background:var(--green);color:#000}
-    .btn-red{background:rgba(255,60,0,.15);color:var(--accent);border:1px solid rgba(255,60,0,.3)}.btn-red:hover{background:var(--accent);color:#fff}
-    .btn-gold{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}.btn-gold:hover{background:var(--gold);color:#000}
-    .btn:disabled{opacity:.5;cursor:not-allowed}
-
-    /* ── SIDEBAR ── */
-    #sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:10}
-    .sidebar-logo{padding:1.5rem;border-bottom:1px solid var(--border);font-family:var(--fd);font-size:1.2rem;letter-spacing:3px}.sidebar-logo span{color:var(--accent)}
-    .sidebar-tag{font-family:var(--fm);font-size:.5rem;letter-spacing:2px;color:var(--muted);margin-top:.2rem}
-    nav.snav{flex:1;padding:1rem 0}
-    .ni{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;color:var(--muted);cursor:pointer;font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;transition:all .2s;border-left:2px solid transparent}
-    .ni:hover{color:var(--text);background:rgba(255,255,255,.03)}
-    .ni.active{color:var(--accent);border-left-color:var(--accent);background:rgba(255,60,0,.05)}
-    .ni i{width:18px;text-align:center}
-    .ni .badge{margin-left:auto;background:var(--accent);color:#fff;font-size:.55rem;padding:.15rem .4rem;border-radius:10px;min-width:18px;text-align:center}
-    .sfooter{padding:1.5rem;border-top:1px solid var(--border)}
-    .admin-badge{display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--muted);margin-bottom:1rem}
-    .admin-av{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff;font-weight:700}
-
-    /* ── MAIN ── */
-    #main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
-    .topbar{padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface);position:sticky;top:0;z-index:5}
-    .page-title{font-family:var(--fd);font-size:1.5rem;letter-spacing:2px}
-    .page-sub{font-family:var(--fm);font-size:.6rem;letter-spacing:2px;color:var(--muted);margin-top:.2rem}
-    .content{padding:2rem}
-
-    /* ── PAGES ── */
-    .page{display:none}.page.active{display:block}
-
-    /* ── STAT CARDS ── */
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:2rem}
-    .sc{background:var(--surface);border:1px solid var(--border);padding:1.5rem;position:relative;overflow:hidden}
-    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-    .sc.orange::before{background:var(--accent)}.sc.gold::before{background:var(--gold)}.sc.green::before{background:var(--green)}.sc.blue::before{background:var(--blue)}
-    .sc-icon{font-size:1.5rem;margin-bottom:1rem}
-    .sc.orange .sc-icon{color:var(--accent)}.sc.gold .sc-icon{color:var(--gold)}.sc.green .sc-icon{color:var(--green)}.sc.blue .sc-icon{color:var(--blue)}
-    .sc-num{font-family:var(--fd);font-size:2.5rem}
-    .sc-label{font-family:var(--fm);font-size:.6rem;letter-spacing:2px;color:var(--muted)}
-    .sc-sub{font-size:.75rem;color:var(--green);margin-top:.25rem}
-
-    /* ── TABLE CARD ── */
-    .tcard{background:var(--surface);border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:1.5rem}
-    .thead2{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-    .thead2-title{font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase}
-    table{width:100%;border-collapse:collapse}
-    th{font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.75rem 1.5rem;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
-    td{padding:.9rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.875rem}
-    tr:last-child td{border-bottom:none}
-    tr:hover td{background:rgba(255,255,255,.02)}
-    .mono{font-family:var(--fm);font-size:.75rem}
-    .act-btns{display:flex;gap:.5rem}
-
-    /* ── BADGES ── */
-    .badge{display:inline-block;font-family:var(--fm);font-size:.55rem;letter-spacing:1px;text-transform:uppercase;padding:.2rem .6rem;border-radius:2px}
-    .b-active{background:rgba(0,200,100,.1);color:var(--green);border:1px solid rgba(0,200,100,.3)}
-    .b-pending{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
-    .b-confirmed{background:rgba(0,200,100,.1);color:var(--green);border:1px solid rgba(0,200,100,.3)}
-    .b-rejected{background:rgba(255,60,0,.1);color:var(--accent);border:1px solid rgba(255,60,0,.3)}
-    .b-sold{background:rgba(255,60,0,.1);color:var(--accent);border:1px solid rgba(255,60,0,.3)}
-    .b-draft{background:rgba(100,100,100,.1);color:var(--muted);border:1px solid rgba(100,100,100,.3)}
-    .b-trap{background:rgba(255,60,0,.1);color:var(--accent);border:1px solid rgba(255,60,0,.2)}
-    .b-rnb{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
-    .b-drill{background:rgba(100,100,255,.1);color:#8888ff;border:1px solid rgba(100,100,255,.2)}
-    .b-hiphop{background:rgba(0,200,100,.1);color:var(--green);border:1px solid rgba(0,200,100,.2)}
-    .b-preset{background:rgba(200,0,200,.1);color:#cc44cc;border:1px solid rgba(200,0,200,.2)}
-
-    /* ── REVENUE CHART ── */
-    .chart-wrap{background:var(--surface);border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem}
-    .chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:1.5rem}
-    .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem}
-    .bar{width:100%;background:var(--accent);border-radius:2px 2px 0 0;opacity:.7;transition:opacity .2s,height .5s;cursor:pointer}
-    .bar:hover{opacity:1}
-    .bar-label{font-family:var(--fm);font-size:.5rem;color:var(--muted);letter-spacing:1px}
-    .bar-val{font-family:var(--fm);font-size:.5rem;color:var(--text)}
-
-    /* ── ORDER FILTER TABS ── */
-    .otabs{display:flex;gap:.5rem;margin-bottom:1rem}
-    .otab{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;padding:.4rem .9rem;cursor:pointer;border-radius:2px;transition:all .2s}
-    .otab:hover,.otab.active{color:var(--text);border-color:var(--accent);background:rgba(255,60,0,.08)}
-
-    /* ── MODAL ── */
-    .mo{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
-    .mo.open{display:flex}
-    .md{background:var(--surface);border:1px solid var(--border);width:100%;max-width:560px;border-radius:4px;overflow:hidden;max-height:92vh;display:flex;flex-direction:column}
-    .mh{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-    .mh h3{font-family:var(--fd);font-size:1.4rem;letter-spacing:1px}
-    .mb{padding:1.5rem;overflow-y:auto}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-
-    /* ── UPLOAD ZONE ── */
-    .uz{border:2px dashed var(--border);border-radius:4px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s;background:var(--bg)}
-    .uz:hover{border-color:var(--accent)}
-    .uz i{font-size:1.5rem;color:var(--muted);margin-bottom:.5rem;display:block}
-    .uz p{font-size:.8rem;color:var(--muted)}
-    .uz input{display:none}
-    .uz.has-file{border-color:var(--green)}.uz.has-file i,.uz.has-file p{color:var(--green)}
-
-    /* ── ORDER DETAIL CARD ── */
-    .order-detail{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1.25rem;margin-bottom:1.25rem}
-    .od-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.85rem}
-    .od-row:last-child{border-bottom:none}
-    .od-label{color:var(--muted)}
-    .od-value{font-family:var(--fm);font-size:.78rem;color:var(--text)}
-
-    /* ── TOAST ── */
-    #toast{position:fixed;top:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem}
-    .t{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:.75rem 1.25rem;border-radius:2px;font-size:.85rem;animation:si .3s both;max-width:320px}
-    .t.ok{border-left-color:var(--green)}.t.err{border-left-color:var(--accent)}
-    @keyframes si{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-
-    /* ── EMPTY STATE ── */
-    .empty-state{text-align:center;padding:4rem;color:var(--muted)}
-    .empty-state i{font-size:2rem;margin-bottom:1rem;display:block}
-    .empty-state p{font-family:var(--fm);font-size:.7rem;letter-spacing:2px}
-
-    /* ── LOADING ── */
-    .loading{text-align:center;padding:3rem;color:var(--muted);font-family:var(--fm);font-size:.7rem;letter-spacing:2px}
-  </style>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Shuki Production — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+:root{--bg:#080808;--s:#101010;--s2:#181818;--bd:#1e1e1e;--ac:#ff3c00;--go:#c9a84c;--gr:#00c864;--re:#ff3c00;--bl:#4488ff;--tx:#f0ece3;--mu:#666;--fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;--sw:240px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);display:flex;min-height:100vh;overflow-x:hidden}
+#loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.lb{background:var(--s);border:1px solid var(--bd);padding:3rem;width:400px;border-radius:4px}
+.ll{font-family:var(--fd);font-size:2rem;letter-spacing:4px;margin-bottom:.25rem}.ll span{color:var(--ac)}
+.ls{font-family:var(--fm);font-size:.6rem;letter-spacing:3px;color:var(--mu);margin-bottom:2.5rem}
+.fg{margin-bottom:1rem}.fg label{display:block;font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:.4rem}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:.75rem 1rem;border-radius:2px;font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--ac)}.fg textarea{resize:vertical;min-height:80px}
+.ferr{color:var(--ac);font-size:.8rem;margin-top:.5rem;display:none}
+.btn{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;border:none;font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border-radius:2px;transition:all .2s;padding:.6rem 1.2rem}
+.btn-ac{background:var(--ac);color:#fff}.btn-ac:hover{background:#ff5722}
+.btn-gh{background:transparent;color:var(--mu);border:1px solid var(--bd)}.btn-gh:hover{color:var(--tx);border-color:#444}
+.btn-gr{background:rgba(0,200,100,.15);color:var(--gr);border:1px solid rgba(0,200,100,.3)}.btn-gr:hover{background:var(--gr);color:#000}
+.btn-re{background:rgba(255,60,0,.15);color:var(--ac);border:1px solid rgba(255,60,0,.3)}.btn-re:hover{background:var(--ac);color:#fff}
+.btn-go{background:rgba(201,168,76,.15);color:var(--go);border:1px solid rgba(201,168,76,.3)}.btn-go:hover{background:var(--go);color:#000}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+#sidebar{width:var(--sw);background:var(--s);border-right:1px solid var(--bd);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:10}
+.slogo{padding:1.5rem;border-bottom:1px solid var(--bd);font-family:var(--fd);font-size:1.2rem;letter-spacing:3px}.slogo span{color:var(--ac)}
+.stag{font-family:var(--fm);font-size:.5rem;letter-spacing:2px;color:var(--mu);margin-top:.2rem}
+nav.snav{flex:1;padding:1rem 0}
+.ni{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;color:var(--mu);cursor:pointer;font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;transition:all .2s;border-left:2px solid transparent}
+.ni:hover{color:var(--tx);background:rgba(255,255,255,.03)}.ni.active{color:var(--ac);border-left-color:var(--ac);background:rgba(255,60,0,.05)}
+.ni i{width:18px;text-align:center}.ni .bdg{margin-left:auto;background:var(--ac);color:#fff;font-size:.55rem;padding:.15rem .4rem;border-radius:10px;min-width:18px;text-align:center}
+.sfooter{padding:1.5rem;border-top:1px solid var(--bd)}
+.adbdg{display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--mu);margin-bottom:1rem}
+.adav{width:32px;height:32px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff;font-weight:700}
+#main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{padding:1.25rem 2rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;background:var(--s);position:sticky;top:0;z-index:5}
+.ptitle{font-family:var(--fd);font-size:1.5rem;letter-spacing:2px}.psub{font-family:var(--fm);font-size:.6rem;letter-spacing:2px;color:var(--mu);margin-top:.2rem}
+.content{padding:2rem}
+.page{display:none}.page.active{display:block}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:2rem}
+.sc{background:var(--s);border:1px solid var(--bd);padding:1.5rem;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc.orange::before{background:var(--ac)}.sc.gold::before{background:var(--go)}.sc.green::before{background:var(--gr)}.sc.blue::before{background:var(--bl)}
+.sc-icon{font-size:1.5rem;margin-bottom:1rem}.sc.orange .sc-icon{color:var(--ac)}.sc.gold .sc-icon{color:var(--go)}.sc.green .sc-icon{color:var(--gr)}.sc.blue .sc-icon{color:var(--bl)}
+.sc-num{font-family:var(--fd);font-size:2.5rem}.sc-label{font-family:var(--fm);font-size:.6rem;letter-spacing:2px;color:var(--mu)}.sc-sub{font-size:.75rem;color:var(--gr);margin-top:.25rem}
+.tcard{background:var(--s);border:1px solid var(--bd);border-radius:2px;overflow:hidden;margin-bottom:1.5rem}
+.thead2{padding:1rem 1.5rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.thead2-t{font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase}
+table{width:100%;border-collapse:collapse}
+th{font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mu);padding:.75rem 1.5rem;text-align:left;border-bottom:1px solid var(--bd);background:var(--s2)}
+td{padding:.9rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.04);font-size:.875rem}
+tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,.02)}
+.mono{font-family:var(--fm);font-size:.75rem}.act-btns{display:flex;gap:.5rem}
+.badge{display:inline-block;font-family:var(--fm);font-size:.55rem;letter-spacing:1px;text-transform:uppercase;padding:.2rem .6rem;border-radius:2px}
+.b-active{background:rgba(0,200,100,.1);color:var(--gr);border:1px solid rgba(0,200,100,.3)}
+.b-pending{background:rgba(201,168,76,.1);color:var(--go);border:1px solid rgba(201,168,76,.3)}
+.b-confirmed{background:rgba(0,200,100,.1);color:var(--gr);border:1px solid rgba(0,200,100,.3)}
+.b-rejected{background:rgba(255,60,0,.1);color:var(--ac);border:1px solid rgba(255,60,0,.3)}
+.b-sold{background:rgba(255,60,0,.1);color:var(--ac);border:1px solid rgba(255,60,0,.3)}
+.b-draft{background:rgba(100,100,100,.1);color:var(--mu);border:1px solid rgba(100,100,100,.3)}
+.b-trap{background:rgba(255,60,0,.1);color:var(--ac);border:1px solid rgba(255,60,0,.2)}
+.b-rnb,.b-mix,.b-master,.b-bundle,.b-preset{background:rgba(201,168,76,.1);color:var(--go);border:1px solid rgba(201,168,76,.2)}
+.b-drill{background:rgba(100,100,255,.1);color:#8888ff;border:1px solid rgba(100,100,255,.2)}
+.b-hiphop{background:rgba(0,200,100,.1);color:var(--gr);border:1px solid rgba(0,200,100,.2)}
+.chart-wrap{background:var(--s);border:1px solid var(--bd);padding:1.5rem;margin-bottom:1.5rem}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:1.5rem}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.bar{width:100%;background:var(--ac);border-radius:2px 2px 0 0;opacity:.7;transition:opacity .2s;cursor:pointer}.bar:hover{opacity:1}
+.bar-label{font-family:var(--fm);font-size:.5rem;color:var(--mu);letter-spacing:1px}.bar-val{font-family:var(--fm);font-size:.5rem;color:var(--tx)}
+.otabs{display:flex;gap:.5rem;margin-bottom:1rem}
+.otab{background:transparent;border:1px solid var(--bd);color:var(--mu);font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;padding:.4rem .9rem;cursor:pointer;border-radius:2px;transition:all .2s}
+.otab:hover,.otab.active{color:var(--tx);border-color:var(--ac);background:rgba(255,60,0,.08)}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}.mo.open{display:flex}
+.md{background:var(--s);border:1px solid var(--bd);width:100%;max-width:560px;border-radius:4px;overflow:hidden;max-height:92vh;display:flex;flex-direction:column}
+.mh{padding:1.5rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.mh h3{font-family:var(--fd);font-size:1.4rem;letter-spacing:1px}.mb{padding:1.5rem;overflow-y:auto}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.uz{border:2px dashed var(--bd);border-radius:4px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s;background:var(--bg)}.uz:hover{border-color:var(--ac)}
+.uz i{font-size:1.5rem;color:var(--mu);margin-bottom:.5rem;display:block}.uz p{font-size:.8rem;color:var(--mu)}.uz input{display:none}
+.uz.has-file{border-color:var(--gr)}.uz.has-file i,.uz.has-file p{color:var(--gr)}
+.od{background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:1.25rem;margin-bottom:1.25rem}
+.od-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.85rem}.od-row:last-child{border-bottom:none}
+.od-lbl{color:var(--mu)}.od-val{font-family:var(--fm);font-size:.78rem;color:var(--tx)}
+#toast{position:fixed;top:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem}
+.t{background:var(--s);border:1px solid var(--bd);border-left:3px solid var(--ac);padding:.75rem 1.25rem;border-radius:2px;font-size:.85rem;animation:si .3s both;max-width:320px}
+.t.ok{border-left-color:var(--gr)}.t.err{border-left-color:var(--ac)}
+@keyframes si{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.empty-s{text-align:center;padding:4rem;color:var(--mu)}.empty-s i{font-size:2rem;margin-bottom:1rem;display:block}
+.empty-s p{font-family:var(--fm);font-size:.7rem;letter-spacing:2px}
+.loading{text-align:center;padding:3rem;color:var(--mu);font-family:var(--fm);font-size:.7rem;letter-spacing:2px}
+</style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen">
-  <div class="login-box">
-    <div class="login-logo">SHUKI<span>.</span></div>
-    <div class="login-sub">// ADMIN PANEL</div>
+  <div class="lb">
+    <div class="ll">SHUKI<span>.</span></div>
+    <div class="ls">// ADMIN PANEL</div>
     <div class="fg"><label>Username</label><input type="text" id="aUser" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()"/></div>
     <div class="fg"><label>Password</label><input type="password" id="aPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
     <div class="ferr" id="loginErr"></div>
-    <button class="btn btn-accent" style="width:100%;justify-content:center;padding:.75rem" onclick="doLogin()">
+    <button class="btn btn-ac" style="width:100%;justify-content:center;padding:.75rem" onclick="doLogin()">
       <span id="loginBtnTxt">LOGIN</span> <i class="fas fa-arrow-right"></i>
     </button>
   </div>
 </div>
 
-<!-- SIDEBAR -->
 <aside id="sidebar">
-  <div class="sidebar-logo">SHUKI<span>.</span><div class="sidebar-tag">ADMIN PANEL</div></div>
+  <div class="slogo">SHUKI<span>.</span><div class="stag">ADMIN PANEL</div></div>
   <nav class="snav">
     <div class="ni active" onclick="showPage('dashboard')"><i class="fas fa-chart-bar"></i> Dashboard</div>
     <div class="ni" onclick="showPage('beats')"><i class="fas fa-music"></i> Beats</div>
     <div class="ni" onclick="showPage('presets')"><i class="fas fa-sliders-h"></i> Presets</div>
-    <div class="ni" id="navOrders" onclick="showPage('orders')"><i class="fas fa-receipt"></i> Orders <span class="badge" id="pendingBadge" style="display:none">0</span></div>
+    <div class="ni" onclick="showPage('orders')"><i class="fas fa-receipt"></i> Orders <span class="bdg" id="pendingBadge" style="display:none">0</span></div>
     <div class="ni" onclick="showPage('users')"><i class="fas fa-users"></i> Users</div>
     <div class="ni" onclick="showPage('services')"><i class="fas fa-concierge-bell"></i> Services</div>
   </nav>
   <div class="sfooter">
-    <div class="admin-badge"><div class="admin-av">A</div><div><div style="color:var(--text);font-size:.8rem">Admin</div><div style="font-size:.65rem">Shuki Production</div></div></div>
-    <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <div class="adbdg"><div class="adav">A</div><div><div style="color:var(--tx);font-size:.8rem">Admin</div><div style="font-size:.65rem">Shuki Production</div></div></div>
+    <button class="btn btn-gh" style="width:100%;justify-content:center" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
 </aside>
 
-<!-- MAIN -->
 <div id="main">
   <div class="topbar">
-    <div><div class="page-title" id="topTitle">DASHBOARD</div><div class="page-sub" id="topSub">// Overview & Analytics</div></div>
+    <div><div class="ptitle" id="topTitle">DASHBOARD</div><div class="psub" id="topSub">// Overview & Analytics</div></div>
     <div style="display:flex;gap:.75rem">
-      <button class="btn btn-ghost" onclick="refreshPage()"><i class="fas fa-sync-alt"></i> Refresh</button>
-      <a href="/" target="_blank" class="btn btn-ghost"><i class="fas fa-external-link-alt"></i> View Site</a>
+      <button class="btn btn-gh" onclick="refreshPage()"><i class="fas fa-sync-alt"></i> Refresh</button>
+      <a href="/" target="_blank" class="btn btn-gh"><i class="fas fa-external-link-alt"></i> View Site</a>
     </div>
   </div>
-
   <div class="content">
 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
-      <div class="stats-row" id="statsRow">
-        <div class="sc orange"><div class="sc-icon"><i class="fas fa-dollar-sign"></i></div><div class="sc-num" id="s-rev">—</div><div class="sc-label">Total Revenue</div><div class="sc-sub" id="s-rev-sub">confirmed orders</div></div>
-        <div class="sc gold"><div class="sc-icon"><i class="fas fa-music"></i></div><div class="sc-num" id="s-beats">—</div><div class="sc-label">Active Beats</div><div class="sc-sub">in store</div></div>
-        <div class="sc green"><div class="sc-icon"><i class="fas fa-receipt"></i></div><div class="sc-num" id="s-orders">—</div><div class="sc-label">Total Orders</div><div class="sc-sub" id="s-pending-txt">— pending</div></div>
-        <div class="sc blue"><div class="sc-icon"><i class="fas fa-users"></i></div><div class="sc-num" id="s-users">—</div><div class="sc-label">Registered Users</div><div class="sc-sub">all time</div></div>
+      <div class="stats-row">
+        <div class="sc orange"><div class="sc-icon"><i class="fas fa-dollar-sign"></i></div><div class="sc-num" id="s-rev">—</div><div class="sc-label">Total Revenue</div></div>
+        <div class="sc gold"><div class="sc-icon"><i class="fas fa-music"></i></div><div class="sc-num" id="s-beats">—</div><div class="sc-label">Active Beats</div></div>
+        <div class="sc green"><div class="sc-icon"><i class="fas fa-receipt"></i></div><div class="sc-num" id="s-orders">—</div><div class="sc-label">Total Orders</div><div class="sc-sub" id="s-pend-txt"></div></div>
+        <div class="sc blue"><div class="sc-icon"><i class="fas fa-users"></i></div><div class="sc-num" id="s-users">—</div><div class="sc-label">Users</div></div>
       </div>
-
       <div class="chart-wrap">
-        <div class="thead2-title">MONTHLY REVENUE (CONFIRMED ORDERS)</div>
-        <div class="chart-bars" id="revenueChart"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></div>
+        <div class="thead2-t">MONTHLY REVENUE</div>
+        <div class="chart-bars" id="revChart"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></div>
       </div>
-
       <div class="tcard">
-        <div class="thead2"><div class="thead2-title">PENDING ORDERS — NEEDS YOUR ATTENTION</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--gold)" id="pendingCount"></span></div>
-        <table><thead><tr><th>Order ID</th><th>User</th><th>Beats</th><th>Method</th><th>Tx Ref</th><th>Amount</th><th>Date</th><th>Action</th></tr></thead>
-        <tbody id="dashPendingTable"></tbody></table>
+        <div class="thead2"><div class="thead2-t">PENDING ORDERS</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--go)" id="pendCount"></span></div>
+        <table><thead><tr><th>Order</th><th>User</th><th>Beats</th><th>Method</th><th>Tx Ref</th><th>Amount</th><th>Date</th><th>Action</th></tr></thead>
+        <tbody id="dashPendTable"></tbody></table>
       </div>
     </div>
 
     <!-- BEATS -->
     <div class="page" id="page-beats">
       <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem">
-        <button class="btn btn-accent" onclick="openBeatMo()"><i class="fas fa-plus"></i> Add Beat</button>
+        <button class="btn btn-ac" onclick="openBeatMo()"><i class="fas fa-plus"></i> Add Beat</button>
       </div>
       <div class="tcard">
-        <div class="thead2"><div class="thead2-title">ALL BEATS</div><span class="mono" id="beatCountTxt" style="color:var(--muted)"></span></div>
+        <div class="thead2"><div class="thead2-t">ALL BEATS</div><span class="mono" id="beatCountTxt" style="color:var(--mu)"></span></div>
         <table><thead><tr><th>Name</th><th>Genre</th><th>BPM</th><th>Key</th><th>Price</th><th>Preview</th><th>File</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="beatsTable"></tbody></table>
       </div>
@@ -235,10 +167,10 @@
     <!-- PRESETS -->
     <div class="page" id="page-presets">
       <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem">
-        <button class="btn btn-accent" onclick="openPresetMo()"><i class="fas fa-plus"></i> Add Preset</button>
+        <button class="btn btn-ac" onclick="openPresetMo()"><i class="fas fa-plus"></i> Add Preset</button>
       </div>
       <div class="tcard">
-        <div class="thead2"><div class="thead2-title">ALL PRESETS</div><span class="mono" id="presetCountTxt" style="color:var(--muted)"></span></div>
+        <div class="thead2"><div class="thead2-t">ALL PRESETS</div><span class="mono" id="presetCountTxt" style="color:var(--mu)"></span></div>
         <table><thead><tr><th>Name</th><th>Type</th><th>Price</th><th>File</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="presetsTable"></tbody></table>
       </div>
@@ -247,13 +179,13 @@
     <!-- ORDERS -->
     <div class="page" id="page-orders">
       <div class="otabs">
-        <button class="otab active" onclick="filterOrders('all',this)">All</button>
-        <button class="otab" onclick="filterOrders('pending',this)">Pending</button>
-        <button class="otab" onclick="filterOrders('confirmed',this)">Confirmed</button>
-        <button class="otab" onclick="filterOrders('rejected',this)">Rejected</button>
+        <button class="otab active" onclick="filterOrd('all',this)">All</button>
+        <button class="otab" onclick="filterOrd('pending',this)">Pending</button>
+        <button class="otab" onclick="filterOrd('confirmed',this)">Confirmed</button>
+        <button class="otab" onclick="filterOrd('rejected',this)">Rejected</button>
       </div>
       <div class="tcard">
-        <table><thead><tr><th>Order ID</th><th>User</th><th>Beats</th><th>License</th><th>Method</th><th>Tx Ref</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>Order</th><th>User</th><th>Beats</th><th>License</th><th>Method</th><th>Tx Ref</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="ordersTable"></tbody></table>
       </div>
     </div>
@@ -261,7 +193,7 @@
     <!-- USERS -->
     <div class="page" id="page-users">
       <div class="tcard">
-        <div class="thead2"><div class="thead2-title">REGISTERED USERS</div><span class="mono" id="userCountTxt" style="color:var(--muted)"></span></div>
+        <div class="thead2"><div class="thead2-t">REGISTERED USERS</div><span class="mono" id="userCountTxt" style="color:var(--mu)"></span></div>
         <table><thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Purchases</th><th>Actions</th></tr></thead>
         <tbody id="usersTable"></tbody></table>
       </div>
@@ -270,26 +202,24 @@
     <!-- SERVICES -->
     <div class="page" id="page-services">
       <div class="tcard">
-        <div class="thead2"><div class="thead2-title">SERVICE REQUESTS</div></div>
+        <div class="thead2"><div class="thead2-t">SERVICE REQUESTS</div></div>
         <table><thead><tr><th>Name</th><th>Email</th><th>Service</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="servicesTable"></tbody></table>
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
 <!-- BEAT MODAL -->
 <div class="mo" id="beatMo">
   <div class="md">
-    <div class="mh"><h3 id="beatMoTitle">ADD BEAT</h3><button class="btn btn-ghost" style="padding:.4rem .75rem" onclick="closeMo('beatMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mh"><h3 id="beatMoTitle">ADD BEAT</h3><button class="btn btn-gh" style="padding:.4rem .75rem" onclick="closeMo('beatMo')"><i class="fas fa-times"></i></button></div>
     <div class="mb">
       <input type="hidden" id="beatEditId"/>
       <div class="fg"><label>Beat Name *</label><input type="text" id="bName" placeholder="e.g. DARK SIDE"/></div>
       <div class="form-row">
-        <div class="fg"><label>Genre *</label>
-          <select id="bGenre"><option value="trap">Trap</option><option value="drill">Drill</option><option value="rnb">R&B</option><option value="hiphop">Hip-Hop</option></select>
-        </div>
+        <div class="fg"><label>Genre *</label><select id="bGenre"><option value="trap">Trap</option><option value="drill">Drill</option><option value="rnb">R&B</option><option value="hiphop">Hip-Hop</option></select></div>
         <div class="fg"><label>BPM</label><input type="number" id="bBpm" placeholder="140"/></div>
       </div>
       <div class="form-row">
@@ -298,24 +228,22 @@
       </div>
       <div class="fg"><label>Description</label><textarea id="bDesc" placeholder="Describe this beat..."></textarea></div>
       <div class="fg">
-        <label>Preview MP3 <span style="color:var(--muted)">(plays on site)</span></label>
+        <label>Preview MP3 <span style="color:var(--mu)">(plays on site)</span></label>
         <div class="uz" id="previewUz" onclick="document.getElementById('previewFile').click()">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p id="previewFileName">Click to upload MP3 preview</p>
-          <input type="file" id="previewFile" accept=".mp3,.wav,.aif,.aiff" onchange="handleFile(this,'previewUz','previewFileName')"/>
+          <i class="fas fa-cloud-upload-alt"></i><p id="previewFileName">Click to upload MP3 preview</p>
+          <input type="file" id="previewFile" accept=".mp3,.wav,.aif" onchange="handleFile(this,'previewUz','previewFileName')"/>
         </div>
       </div>
       <div class="fg">
-        <label>Beat File WAV/ZIP <span style="color:var(--muted)">(delivered to buyer)</span></label>
+        <label>Beat File WAV/ZIP <span style="color:var(--mu)">(delivered to buyer)</span></label>
         <div class="uz" id="beatFileUz" onclick="document.getElementById('beatFileInput').click()">
-          <i class="fas fa-file-audio"></i>
-          <p id="beatFileName">Click to upload WAV / ZIP with stems</p>
-          <input type="file" id="beatFileInput" accept=".wav,.zip,.rar,.aif,.aiff" onchange="handleFile(this,'beatFileUz','beatFileName')"/>
+          <i class="fas fa-file-audio"></i><p id="beatFileName">Click to upload WAV / ZIP</p>
+          <input type="file" id="beatFileInput" accept=".wav,.zip,.rar,.aif" onchange="handleFile(this,'beatFileUz','beatFileName')"/>
         </div>
       </div>
       <div style="display:flex;gap:.75rem;margin-top:1.5rem">
-        <button class="btn btn-accent" style="flex:1;justify-content:center" id="saveBeatBtn" onclick="saveBeat()"><i class="fas fa-save"></i> SAVE BEAT</button>
-        <button class="btn btn-ghost" onclick="closeMo('beatMo')">Cancel</button>
+        <button class="btn btn-ac" style="flex:1;justify-content:center" id="saveBeatBtn" onclick="saveBeat()"><i class="fas fa-save"></i> SAVE BEAT</button>
+        <button class="btn btn-gh" onclick="closeMo('beatMo')">Cancel</button>
       </div>
     </div>
   </div>
@@ -324,36 +252,32 @@
 <!-- PRESET MODAL -->
 <div class="mo" id="presetMo">
   <div class="md">
-    <div class="mh"><h3 id="presetMoTitle">ADD PRESET</h3><button class="btn btn-ghost" style="padding:.4rem .75rem" onclick="closeMo('presetMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mh"><h3 id="presetMoTitle">ADD PRESET</h3><button class="btn btn-gh" style="padding:.4rem .75rem" onclick="closeMo('presetMo')"><i class="fas fa-times"></i></button></div>
     <div class="mb">
       <input type="hidden" id="presetEditId"/>
       <div class="fg"><label>Preset Name *</label><input type="text" id="pName" placeholder="e.g. VIBE CHECK"/></div>
       <div class="form-row">
-        <div class="fg"><label>Type *</label>
-          <select id="pType"><option value="preset">Vocal Preset</option><option value="mix">Mix Template</option><option value="master">Master Chain</option><option value="bundle">Bundle Pack</option></select>
-        </div>
+        <div class="fg"><label>Type *</label><select id="pType"><option value="preset">Vocal Preset</option><option value="mix">Mix Template</option><option value="master">Master Chain</option><option value="bundle">Bundle Pack</option></select></div>
         <div class="fg"><label>Price ($) *</label><input type="number" id="pPrice" placeholder="14.99" step="0.01"/></div>
       </div>
       <div class="fg"><label>Description</label><textarea id="pDesc" placeholder="Describe the preset..."></textarea></div>
       <div class="fg">
-        <label>Preview MP3 <span style="color:var(--muted)">(optional)</span></label>
+        <label>Preview MP3 <span style="color:var(--mu)">(optional)</span></label>
         <div class="uz" id="pPreviewUz" onclick="document.getElementById('pPreviewFile').click()">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p id="pPreviewFileName">Click to upload preview</p>
+          <i class="fas fa-cloud-upload-alt"></i><p id="pPreviewFileName">Click to upload preview</p>
           <input type="file" id="pPreviewFile" accept=".mp3,.wav" onchange="handleFile(this,'pPreviewUz','pPreviewFileName')"/>
         </div>
       </div>
       <div class="fg">
-        <label>Preset File ZIP * <span style="color:var(--muted)">(delivered to buyer)</span></label>
+        <label>Preset File ZIP *</label>
         <div class="uz" id="pFileUz" onclick="document.getElementById('pFileInput').click()">
-          <i class="fas fa-archive"></i>
-          <p id="pFileName">Click to upload ZIP / RAR</p>
+          <i class="fas fa-archive"></i><p id="pFileName">Click to upload ZIP / RAR</p>
           <input type="file" id="pFileInput" accept=".zip,.rar" onchange="handleFile(this,'pFileUz','pFileName')"/>
         </div>
       </div>
       <div style="display:flex;gap:.75rem;margin-top:1.5rem">
-        <button class="btn btn-accent" style="flex:1;justify-content:center" id="savePresetBtn" onclick="savePreset()"><i class="fas fa-save"></i> SAVE PRESET</button>
-        <button class="btn btn-ghost" onclick="closeMo('presetMo')">Cancel</button>
+        <button class="btn btn-ac" style="flex:1;justify-content:center" id="savePresetBtn" onclick="savePreset()"><i class="fas fa-save"></i> SAVE PRESET</button>
+        <button class="btn btn-gh" onclick="closeMo('presetMo')">Cancel</button>
       </div>
     </div>
   </div>
@@ -362,7 +286,7 @@
 <!-- ORDER DETAIL MODAL -->
 <div class="mo" id="orderMo">
   <div class="md" style="max-width:520px">
-    <div class="mh"><h3>ORDER DETAILS</h3><button class="btn btn-ghost" style="padding:.4rem .75rem" onclick="closeMo('orderMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mh"><h3>ORDER DETAILS</h3><button class="btn btn-gh" style="padding:.4rem .75rem" onclick="closeMo('orderMo')"><i class="fas fa-times"></i></button></div>
     <div class="mb" id="orderDetail"></div>
   </div>
 </div>
@@ -370,468 +294,274 @@
 <div id="toast"></div>
 
 <script>
-const API = '';
-let adminToken = sessionStorage.getItem('sk_admin') || null;
-let allOrders  = [];
-let curOrderFilter = 'all';
+let adminToken=sessionStorage.getItem('sk_admin')||null;
+let allOrders=[],curOrdFilter='all';
 
-// ── LOGIN ─────────────────────────────────────────────────────
-async function doLogin() {
-  const u = document.getElementById('aUser').value.trim();
-  const p = document.getElementById('aPass').value;
-  if (!u || !p) { showFerr('loginErr','Enter username and password'); return; }
-  const btn = document.getElementById('loginBtnTxt');
-  btn.textContent = 'Logging in...';
-  try {
-    const res = await fetch(`${API}/api/auth/admin-login`, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ username:u, password:p })
-    });
-    const d = await res.json();
-    if (!res.ok) throw new Error(d.error || 'Login failed');
-    adminToken = d.token;
-    sessionStorage.setItem('sk_admin', adminToken);
-    document.getElementById('loginScreen').style.display = 'none';
-    initAdmin();
-  } catch(e) {
-    showFerr('loginErr', e.message);
-    btn.textContent = 'LOGIN';
-  }
-}
-function adminLogout() {
-  adminToken = null; sessionStorage.removeItem('sk_admin');
-  document.getElementById('loginScreen').style.display = 'flex';
-}
-
-// Auto-login if token exists
-if (adminToken) {
-  document.getElementById('loginScreen').style.display = 'none';
-}
-
-// ── API HELPER ─────────────────────────────────────────────────
-async function api(path, opts={}) {
-  const headers = { ...(opts.headers||{}) };
-  if (!(opts.body instanceof FormData)) headers['Content-Type'] = 'application/json';
-  if (adminToken) headers['x-admin-token'] = adminToken;
-  const res = await fetch(API + path, { ...opts, headers });
-  if (res.status === 401) { adminLogout(); throw new Error('Session expired. Please log in again.'); }
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Request failed');
+async function apiFetch(path,opts={}){
+  const headers={};
+  if(!(opts.body instanceof FormData))headers['Content-Type']='application/json';
+  if(adminToken)headers['x-admin-token']=adminToken;
+  const res=await fetch(path,{...opts,headers});
+  if(res.status===401){adminLogout();throw new Error('Session expired');}
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok)throw new Error(data.error||'Error '+res.status);
   return data;
 }
 
-// ── INIT ──────────────────────────────────────────────────────
-async function initAdmin() {
-  await loadDashboard();
+async function doLogin(){
+  const u=document.getElementById('aUser').value.trim();
+  const p=document.getElementById('aPass').value;
+  if(!u||!p){showFerr('loginErr','Enter credentials');return;}
+  document.getElementById('loginBtnTxt').textContent='Logging in...';
+  try{
+    const d=await fetch('/api/auth/admin-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const json=await d.json();
+    if(!d.ok)throw new Error(json.error||'Login failed');
+    adminToken=json.token;sessionStorage.setItem('sk_admin',adminToken);
+    document.getElementById('loginScreen').style.display='none';
+    initAdmin();
+  }catch(e){showFerr('loginErr',e.message);document.getElementById('loginBtnTxt').textContent='LOGIN';}
 }
+function adminLogout(){adminToken=null;sessionStorage.removeItem('sk_admin');document.getElementById('loginScreen').style.display='flex';}
+if(adminToken){document.getElementById('loginScreen').style.display='none';}
 
-// ── NAVIGATION ────────────────────────────────────────────────
-const pageMeta = {
-  dashboard: ['DASHBOARD','// Overview & Analytics'],
-  beats:     ['BEATS','// Manage Beat Catalog'],
-  presets:   ['PRESETS','// Vocal Presets & Tools'],
-  orders:    ['ORDERS','// Purchase History'],
-  users:     ['USERS','// Registered Members'],
-  services:  ['SERVICES','// Service Requests'],
-};
-function showPage(name) {
+const pageMeta={dashboard:['DASHBOARD','// Overview & Analytics'],beats:['BEATS','// Beat Catalog'],presets:['PRESETS','// Vocal Presets'],orders:['ORDERS','// Purchase History'],users:['USERS','// Registered Members'],services:['SERVICES','// Service Requests']};
+function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
-  document.getElementById(`page-${name}`).classList.add('active');
-  document.querySelectorAll('.ni').forEach(n=>{ if(n.textContent.trim().toLowerCase().startsWith(name.slice(0,4))) n.classList.add('active'); });
-  const [t,s] = pageMeta[name]||[name.toUpperCase(),''];
-  document.getElementById('topTitle').textContent = t;
-  document.getElementById('topSub').textContent   = s;
-  const loaders = { dashboard:loadDashboard, beats:loadBeats, presets:loadPresets, orders:loadOrders, users:loadUsers, services:loadServices };
-  if (loaders[name]) loaders[name]();
+  document.getElementById('page-'+name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  const[t,s]=pageMeta[name]||[name.toUpperCase(),''];
+  document.getElementById('topTitle').textContent=t;document.getElementById('topSub').textContent=s;
+  ({dashboard:loadDashboard,beats:loadBeats,presets:loadPresets,orders:loadOrders,users:loadUsers,services:loadServices})[name]?.();
 }
-function refreshPage() {
-  const active = document.querySelector('.ni.active');
-  if (active) active.click();
-}
+function refreshPage(){document.querySelector('.ni.active')?.click();}
 
-// ── DASHBOARD ─────────────────────────────────────────────────
-async function loadDashboard() {
-  try {
-    const stats = await api('/api/orders/admin/stats');
-    document.getElementById('s-rev').textContent      = '$'+stats.totalRevenue.toFixed(2);
-    document.getElementById('s-beats').textContent    = stats.activeBeats;
-    document.getElementById('s-orders').textContent   = stats.totalOrders;
-    document.getElementById('s-users').textContent    = stats.totalUsers;
-    document.getElementById('s-pending-txt').textContent = stats.pendingOrders+' pending';
-    document.getElementById('pendingCount').textContent  = stats.pendingOrders ? `${stats.pendingOrders} need attention` : 'All clear ✓';
+async function initAdmin(){await loadDashboard();}
 
-    // Pending badge in sidebar
-    const badge = document.getElementById('pendingBadge');
-    if (stats.pendingOrders > 0) { badge.style.display=''; badge.textContent=stats.pendingOrders; }
-    else { badge.style.display='none'; }
-
-    // Revenue chart
-    const monthly = stats.monthlyRevenue || {};
-    const keys = Object.keys(monthly);
-    const max  = Math.max(...Object.values(monthly),1);
-    document.getElementById('revenueChart').innerHTML = keys.length
-      ? keys.map(k=>`
-          <div class="bar-wrap">
-            <div class="bar-val">$${monthly[k]>=1000?(monthly[k]/1000).toFixed(1)+'k':monthly[k].toFixed(0)}</div>
-            <div class="bar" style="height:${(monthly[k]/max)*100}px" title="${k}: $${monthly[k].toFixed(2)}"></div>
-            <div class="bar-label">${k}</div>
-          </div>`).join('')
-      : '<div style="color:var(--muted);font-family:var(--fm);font-size:.7rem;padding:2rem">No confirmed orders yet</div>';
-
-    // Pending orders table
-    const pending = await api('/api/orders/admin/all?status=pending');
-    renderOrdersTable(pending, 'dashPendingTable', true);
-  } catch(e) { showToast(e.message,'err'); }
+async function loadDashboard(){
+  try{
+    const stats=await apiFetch('/api/orders/admin/stats');
+    document.getElementById('s-rev').textContent='$'+stats.totalRevenue.toFixed(2);
+    document.getElementById('s-beats').textContent=stats.activeBeats;
+    document.getElementById('s-orders').textContent=stats.totalOrders;
+    document.getElementById('s-users').textContent=stats.totalUsers;
+    document.getElementById('s-pend-txt').textContent=stats.pendingOrders+' pending';
+    document.getElementById('pendCount').textContent=stats.pendingOrders?stats.pendingOrders+' need attention':'All clear ✓';
+    const bdg=document.getElementById('pendingBadge');
+    if(stats.pendingOrders>0){bdg.style.display='';bdg.textContent=stats.pendingOrders;}else{bdg.style.display='none';}
+    const m=stats.monthlyRevenue||{},keys=Object.keys(m),max=Math.max(...Object.values(m),1);
+    document.getElementById('revChart').innerHTML=keys.length?keys.map(k=>`<div class="bar-wrap"><div class="bar-val">$${m[k]>=1000?(m[k]/1000).toFixed(1)+'k':m[k].toFixed(0)}</div><div class="bar" style="height:${(m[k]/max)*100}px" title="${k}"></div><div class="bar-label">${k}</div></div>`).join(''):'<div style="color:var(--mu);font-family:var(--fm);font-size:.7rem">No confirmed orders yet</div>';
+    const pending=await apiFetch('/api/orders/admin/all?status=pending');
+    renderOrdTable(pending,'dashPendTable',true);
+  }catch(e){showToast(e.message,'err');}
 }
 
-// ── BEATS ─────────────────────────────────────────────────────
-async function loadBeats() {
-  document.getElementById('beatsTable').innerHTML = `<tr><td colspan="9"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div></td></tr>`;
-  try {
-    const beats = await api('/api/beats/admin/all');
-    const b = beats.filter(x=>x.type==='beat');
-    document.getElementById('beatCountTxt').textContent = b.length+' beats';
-    document.getElementById('beatsTable').innerHTML = b.length ? b.map(renderBeatRow).join('') : emptyRow(9,'No beats yet. Add your first beat!');
-  } catch(e) { showToast(e.message,'err'); }
+async function loadBeats(){
+  document.getElementById('beatsTable').innerHTML=`<tr><td colspan="9"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
+  try{
+    const all=await apiFetch('/api/beats/admin/all');
+    const b=all.filter(x=>x.type==='beat');
+    document.getElementById('beatCountTxt').textContent=b.length+' beats';
+    document.getElementById('beatsTable').innerHTML=b.length?b.map(beatRow).join(''):emptyRow(9,'No beats yet');
+  }catch(e){showToast(e.message,'err');}
+}
+function beatRow(b){return`<tr>
+  <td style="font-family:var(--fd);letter-spacing:1px">${b.name}</td>
+  <td><span class="badge b-${b.genre}">${b.genre}</span></td>
+  <td class="mono">${b.bpm||'—'}</td><td class="mono" style="font-size:.75rem">${b.key||'—'}</td>
+  <td style="color:var(--ac);font-family:var(--fm)">$${b.price.toFixed(2)}</td>
+  <td>${b.previewFile?'<span class="badge b-active"><i class="fas fa-check"></i> Yes</span>':'<span class="badge b-draft">No</span>'}</td>
+  <td>${b.beatFile?'<span class="badge b-active"><i class="fas fa-check"></i> Yes</span>':'<span class="badge b-draft">No</span>'}</td>
+  <td><span class="badge b-${b.status}">${b.status}</span></td>
+  <td><div class="act-btns">
+    <button class="btn btn-gh" style="padding:.3rem .6rem;font-size:.6rem" onclick='editBeat(${JSON.stringify(b)})'><i class="fas fa-edit"></i></button>
+    <button class="btn btn-re" style="padding:.3rem .6rem;font-size:.6rem" onclick="delBeat('${b._id}','${b.name}')"><i class="fas fa-trash"></i></button>
+  </div></td>
+</tr>`;}
+
+function openBeatMo(){clearBeatForm();document.getElementById('beatMoTitle').textContent='ADD BEAT';openMo('beatMo');}
+function editBeat(b){clearBeatForm();document.getElementById('beatMoTitle').textContent='EDIT BEAT';document.getElementById('beatEditId').value=b._id;document.getElementById('bName').value=b.name;document.getElementById('bGenre').value=b.genre;document.getElementById('bBpm').value=b.bpm||'';document.getElementById('bKey').value=b.key||'';document.getElementById('bPrice').value=b.price;document.getElementById('bDesc').value=b.description||'';if(b.previewFile){document.getElementById('previewFileName').textContent='✓ '+b.previewFile;document.getElementById('previewUz').classList.add('has-file');}if(b.beatFile){document.getElementById('beatFileName').textContent='✓ '+b.beatFile;document.getElementById('beatFileUz').classList.add('has-file');}openMo('beatMo');}
+function clearBeatForm(){['beatEditId','bName','bBpm','bKey','bPrice','bDesc'].forEach(id=>document.getElementById(id).value='');document.getElementById('bGenre').value='trap';['previewFileName','beatFileName'].forEach(id=>document.getElementById(id).textContent=id==='previewFileName'?'Click to upload MP3 preview':'Click to upload WAV / ZIP');['previewFile','beatFileInput'].forEach(id=>document.getElementById(id).value='');['previewUz','beatFileUz'].forEach(id=>document.getElementById(id).classList.remove('has-file'));}
+
+async function saveBeat(){
+  const name=document.getElementById('bName').value.trim(),price=document.getElementById('bPrice').value;
+  if(!name||!price){showToast('Name and price required','err');return;}
+  const btn=document.getElementById('saveBeatBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';
+  const fd=new FormData();
+  fd.append('name',name);fd.append('genre',document.getElementById('bGenre').value);
+  fd.append('bpm',document.getElementById('bBpm').value);fd.append('key',document.getElementById('bKey').value);
+  fd.append('price',price);fd.append('description',document.getElementById('bDesc').value);fd.append('type','beat');
+  const pf=document.getElementById('previewFile').files[0],bf=document.getElementById('beatFileInput').files[0];
+  if(pf)fd.append('preview',pf);if(bf)fd.append('beatfile',bf);
+  try{
+    const editId=document.getElementById('beatEditId').value;
+    const headers={'x-admin-token':adminToken};
+    if(editId){await fetch('/api/beats/'+editId,{method:'PUT',headers,body:fd});}
+    else{await fetch('/api/beats',{method:'POST',headers,body:fd});}
+    showToast(editId?'Beat updated!':'Beat added! Live on site.','ok');closeMo('beatMo');loadBeats();
+  }catch(e){showToast(e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> SAVE BEAT';}
+}
+async function delBeat(id,name){
+  if(!confirm('Delete "'+name+'"?'))return;
+  try{await apiFetch('/api/beats/'+id,{method:'DELETE'});showToast('Deleted','ok');loadBeats();}
+  catch(e){showToast(e.message,'err');}
 }
 
-function renderBeatRow(b) {
-  return `<tr>
-    <td style="font-family:var(--fd);letter-spacing:1px">${b.name}</td>
-    <td><span class="badge b-${b.genre}">${b.genre}</span></td>
-    <td class="mono">${b.bpm||'—'}</td>
-    <td class="mono" style="font-size:.75rem">${b.key||'—'}</td>
-    <td style="color:var(--accent);font-family:var(--fm)">$${b.price.toFixed(2)}</td>
-    <td>${b.previewFile?`<span class="badge b-active"><i class="fas fa-check"></i> Yes</span>`:`<span class="badge b-draft">No</span>`}</td>
-    <td>${b.beatFile?`<span class="badge b-active"><i class="fas fa-check"></i> Yes</span>`:`<span class="badge b-draft">No</span>`}</td>
-    <td><span class="badge b-${b.status}">${b.status}</span></td>
-    <td>
-      <div class="act-btns">
-        <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.6rem" onclick='editBeat(${JSON.stringify(b)})'><i class="fas fa-edit"></i></button>
-        <button class="btn btn-red" style="padding:.3rem .6rem;font-size:.6rem" onclick="deleteBeat('${b._id}','${b.name}')"><i class="fas fa-trash"></i></button>
-      </div>
-    </td>
-  </tr>`;
+async function loadPresets(){
+  document.getElementById('presetsTable').innerHTML=`<tr><td colspan="6"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
+  try{
+    const all=await apiFetch('/api/beats/admin/all');
+    const p=all.filter(x=>x.type==='preset');
+    document.getElementById('presetCountTxt').textContent=p.length+' presets';
+    document.getElementById('presetsTable').innerHTML=p.length?p.map(presetRow).join(''):emptyRow(6,'No presets yet');
+  }catch(e){showToast(e.message,'err');}
+}
+function presetRow(p){return`<tr>
+  <td style="font-family:var(--fd);letter-spacing:1px">${p.name}</td>
+  <td><span class="badge b-${p.genre}">${p.genre}</span></td>
+  <td style="color:var(--ac);font-family:var(--fm)">$${p.price.toFixed(2)}</td>
+  <td>${p.beatFile?'<span class="badge b-active"><i class="fas fa-check"></i> Yes</span>':'<span class="badge b-draft">No</span>'}</td>
+  <td><span class="badge b-${p.status}">${p.status}</span></td>
+  <td><div class="act-btns">
+    <button class="btn btn-gh" style="padding:.3rem .6rem;font-size:.6rem" onclick='editPreset(${JSON.stringify(p)})'><i class="fas fa-edit"></i></button>
+    <button class="btn btn-re" style="padding:.3rem .6rem;font-size:.6rem" onclick="delBeat('${p._id}','${p.name}')"><i class="fas fa-trash"></i></button>
+  </div></td>
+</tr>`;}
+function openPresetMo(){clearPresetForm();document.getElementById('presetMoTitle').textContent='ADD PRESET';openMo('presetMo');}
+function editPreset(p){clearPresetForm();document.getElementById('presetMoTitle').textContent='EDIT PRESET';document.getElementById('presetEditId').value=p._id;document.getElementById('pName').value=p.name;document.getElementById('pType').value=p.genre;document.getElementById('pPrice').value=p.price;document.getElementById('pDesc').value=p.description||'';if(p.previewFile){document.getElementById('pPreviewFileName').textContent='✓ '+p.previewFile;document.getElementById('pPreviewUz').classList.add('has-file');}if(p.beatFile){document.getElementById('pFileName').textContent='✓ '+p.beatFile;document.getElementById('pFileUz').classList.add('has-file');}openMo('presetMo');}
+function clearPresetForm(){['presetEditId','pName','pPrice','pDesc'].forEach(id=>document.getElementById(id).value='');document.getElementById('pType').value='preset';document.getElementById('pPreviewFileName').textContent='Click to upload preview';document.getElementById('pFileName').textContent='Click to upload ZIP / RAR';['pPreviewFile','pFileInput'].forEach(id=>document.getElementById(id).value='');['pPreviewUz','pFileUz'].forEach(id=>document.getElementById(id).classList.remove('has-file'));}
+async function savePreset(){
+  const name=document.getElementById('pName').value.trim(),price=document.getElementById('pPrice').value;
+  if(!name||!price){showToast('Name and price required','err');return;}
+  const btn=document.getElementById('savePresetBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';
+  const fd=new FormData();
+  fd.append('name',name);fd.append('genre',document.getElementById('pType').value);fd.append('price',price);fd.append('description',document.getElementById('pDesc').value);fd.append('type','preset');
+  const pf=document.getElementById('pPreviewFile').files[0],bf=document.getElementById('pFileInput').files[0];
+  if(pf)fd.append('preview',pf);if(bf)fd.append('beatfile',bf);
+  try{
+    const editId=document.getElementById('presetEditId').value;
+    const headers={'x-admin-token':adminToken};
+    if(editId){await fetch('/api/beats/'+editId,{method:'PUT',headers,body:fd});}
+    else{await fetch('/api/beats',{method:'POST',headers,body:fd});}
+    showToast(editId?'Preset updated!':'Preset added! Live on site.','ok');closeMo('presetMo');loadPresets();
+  }catch(e){showToast(e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> SAVE PRESET';}
 }
 
-// BEAT MODAL
-function openBeatMo() {
-  clearBeatForm();
-  document.getElementById('beatMoTitle').textContent='ADD BEAT';
-  openMo('beatMo');
+async function loadOrders(){
+  document.getElementById('ordersTable').innerHTML=`<tr><td colspan="10"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
+  try{allOrders=await apiFetch('/api/orders/admin/all');renderOrdTable(filterOrdList(allOrders,curOrdFilter),'ordersTable',false);}
+  catch(e){showToast(e.message,'err');}
 }
-function editBeat(b) {
-  clearBeatForm();
-  document.getElementById('beatMoTitle').textContent='EDIT BEAT';
-  document.getElementById('beatEditId').value = b._id;
-  document.getElementById('bName').value       = b.name;
-  document.getElementById('bGenre').value      = b.genre;
-  document.getElementById('bBpm').value        = b.bpm||'';
-  document.getElementById('bKey').value        = b.key||'';
-  document.getElementById('bPrice').value      = b.price;
-  document.getElementById('bDesc').value       = b.description||'';
-  if (b.previewFile) { document.getElementById('previewFileName').textContent='✓ '+b.previewFile; document.getElementById('previewUz').classList.add('has-file'); }
-  if (b.beatFile)    { document.getElementById('beatFileName').textContent='✓ '+b.beatFile;    document.getElementById('beatFileUz').classList.add('has-file'); }
-  openMo('beatMo');
-}
-function clearBeatForm() {
-  ['beatEditId','bName','bBpm','bKey','bPrice','bDesc'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('bGenre').value='trap';
-  document.getElementById('previewFileName').textContent='Click to upload MP3 preview';
-  document.getElementById('beatFileName').textContent='Click to upload WAV / ZIP with stems';
-  document.getElementById('previewFile').value='';
-  document.getElementById('beatFileInput').value='';
-  document.getElementById('previewUz').classList.remove('has-file');
-  document.getElementById('beatFileUz').classList.remove('has-file');
-}
-
-async function saveBeat() {
-  const name  = document.getElementById('bName').value.trim();
-  const genre = document.getElementById('bGenre').value;
-  const price = document.getElementById('bPrice').value;
-  if (!name||!price) { showToast('Name and price are required','err'); return; }
-
-  const btn = document.getElementById('saveBeatBtn');
-  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-  const fd = new FormData();
-  fd.append('name',        name);
-  fd.append('genre',       genre);
-  fd.append('bpm',         document.getElementById('bBpm').value||'');
-  fd.append('key',         document.getElementById('bKey').value||'');
-  fd.append('price',       price);
-  fd.append('description', document.getElementById('bDesc').value||'');
-  fd.append('type',        'beat');
-  const pf = document.getElementById('previewFile').files[0];
-  const bf = document.getElementById('beatFileInput').files[0];
-  if (pf) fd.append('preview', pf);
-  if (bf) fd.append('beatfile', bf);
-
-  try {
-    const editId = document.getElementById('beatEditId').value;
-    if (editId) {
-      await fetch(`${API}/api/beats/${editId}`,{ method:'PUT', headers:{'x-admin-token':adminToken}, body:fd });
-      showToast('Beat updated! Live on the site.','ok');
-    } else {
-      await fetch(`${API}/api/beats`,{ method:'POST', headers:{'x-admin-token':adminToken}, body:fd });
-      showToast('Beat added! Live on the site now.','ok');
-    }
-    closeMo('beatMo');
-    loadBeats();
-  } catch(e) { showToast(e.message,'err'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> SAVE BEAT'; }
-}
-
-async function deleteBeat(id, name) {
-  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-  try { await api(`/api/beats/${id}`,{method:'DELETE'}); showToast('Beat deleted','ok'); loadBeats(); }
-  catch(e) { showToast(e.message,'err'); }
-}
-
-// ── PRESETS ───────────────────────────────────────────────────
-async function loadPresets() {
-  document.getElementById('presetsTable').innerHTML = `<tr><td colspan="6"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div></td></tr>`;
-  try {
-    const all = await api('/api/beats/admin/all');
-    const presets = all.filter(x=>x.type==='preset');
-    document.getElementById('presetCountTxt').textContent = presets.length+' presets';
-    document.getElementById('presetsTable').innerHTML = presets.length ? presets.map(renderPresetRow).join('') : emptyRow(6,'No presets yet. Add your first preset!');
-  } catch(e) { showToast(e.message,'err'); }
-}
-
-function renderPresetRow(p) {
-  return `<tr>
-    <td style="font-family:var(--fd);letter-spacing:1px">${p.name}</td>
-    <td><span class="badge b-preset">${p.genre}</span></td>
-    <td style="color:var(--accent);font-family:var(--fm)">$${p.price.toFixed(2)}</td>
-    <td>${p.beatFile?`<span class="badge b-active"><i class="fas fa-check"></i> Yes</span>`:`<span class="badge b-draft">No</span>`}</td>
-    <td><span class="badge b-${p.status}">${p.status}</span></td>
-    <td>
-      <div class="act-btns">
-        <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.6rem" onclick='editPreset(${JSON.stringify(p)})'><i class="fas fa-edit"></i></button>
-        <button class="btn btn-red" style="padding:.3rem .6rem;font-size:.6rem" onclick="deleteBeat('${p._id}','${p.name}')"><i class="fas fa-trash"></i></button>
-      </div>
-    </td>
-  </tr>`;
-}
-
-function openPresetMo() { clearPresetForm(); document.getElementById('presetMoTitle').textContent='ADD PRESET'; openMo('presetMo'); }
-function editPreset(p) {
-  clearPresetForm();
-  document.getElementById('presetMoTitle').textContent='EDIT PRESET';
-  document.getElementById('presetEditId').value = p._id;
-  document.getElementById('pName').value         = p.name;
-  document.getElementById('pType').value         = p.genre;
-  document.getElementById('pPrice').value        = p.price;
-  document.getElementById('pDesc').value         = p.description||'';
-  if (p.previewFile) { document.getElementById('pPreviewFileName').textContent='✓ '+p.previewFile; document.getElementById('pPreviewUz').classList.add('has-file'); }
-  if (p.beatFile)    { document.getElementById('pFileName').textContent='✓ '+p.beatFile;    document.getElementById('pFileUz').classList.add('has-file'); }
-  openMo('presetMo');
-}
-function clearPresetForm() {
-  ['presetEditId','pName','pPrice','pDesc'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('pType').value='preset';
-  document.getElementById('pPreviewFileName').textContent='Click to upload preview';
-  document.getElementById('pFileName').textContent='Click to upload ZIP / RAR';
-  document.getElementById('pPreviewFile').value=''; document.getElementById('pFileInput').value='';
-  document.getElementById('pPreviewUz').classList.remove('has-file'); document.getElementById('pFileUz').classList.remove('has-file');
-}
-async function savePreset() {
-  const name  = document.getElementById('pName').value.trim();
-  const price = document.getElementById('pPrice').value;
-  if (!name||!price) { showToast('Name and price are required','err'); return; }
-  const btn = document.getElementById('savePresetBtn');
-  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';
-  const fd = new FormData();
-  fd.append('name',        name);
-  fd.append('genre',       document.getElementById('pType').value);
-  fd.append('price',       price);
-  fd.append('description', document.getElementById('pDesc').value||'');
-  fd.append('type',        'preset');
-  const pf = document.getElementById('pPreviewFile').files[0];
-  const bf = document.getElementById('pFileInput').files[0];
-  if (pf) fd.append('preview', pf);
-  if (bf) fd.append('beatfile', bf);
-  try {
-    const editId = document.getElementById('presetEditId').value;
-    if (editId) {
-      await fetch(`${API}/api/beats/${editId}`,{ method:'PUT', headers:{'x-admin-token':adminToken}, body:fd });
-      showToast('Preset updated! Live on the site.','ok');
-    } else {
-      await fetch(`${API}/api/beats`,{ method:'POST', headers:{'x-admin-token':adminToken}, body:fd });
-      showToast('Preset added! Live on the site now.','ok');
-    }
-    closeMo('presetMo'); loadPresets();
-  } catch(e) { showToast(e.message,'err'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> SAVE PRESET'; }
-}
-
-// ── ORDERS ────────────────────────────────────────────────────
-async function loadOrders() {
-  document.getElementById('ordersTable').innerHTML=`<tr><td colspan="10"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div></td></tr>`;
-  try {
-    allOrders = await api('/api/orders/admin/all');
-    renderOrdersTable(filterOrdersList(allOrders, curOrderFilter), 'ordersTable', false);
-  } catch(e) { showToast(e.message,'err'); }
-}
-function filterOrdersList(list, f) { return f==='all' ? list : list.filter(o=>o.status===f); }
-function filterOrders(f, btn) {
-  curOrderFilter = f;
-  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
-  renderOrdersTable(filterOrdersList(allOrders,f), 'ordersTable', false);
-}
-
-function renderOrdersTable(orders, tableId, compact=false) {
-  const tbody = document.getElementById(tableId);
-  if (!orders.length) { tbody.innerHTML=emptyRow(compact?8:10,'No orders found'); return; }
-  tbody.innerHTML = orders.map(o=>{
-    const beats = o.items.map(i=>i.beatName||'—').join(', ');
-    const shortId = String(o._id).slice(-8).toUpperCase();
-    return `<tr>
-      <td class="mono" style="font-size:.7rem">#${shortId}</td>
-      <td><div style="font-size:.85rem">${o.userName||'—'}</div><div class="mono" style="font-size:.65rem;color:var(--muted)">${o.userEmail||''}</div></td>
-      <td style="max-width:160px;font-size:.8rem">${beats}</td>
+function filterOrdList(list,f){return f==='all'?list:list.filter(o=>o.status===f);}
+function filterOrd(f,btn){curOrdFilter=f;document.querySelectorAll('.otab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderOrdTable(filterOrdList(allOrders,f),'ordersTable',false);}
+function renderOrdTable(orders,tableId,compact=false){
+  const tbody=document.getElementById(tableId);
+  if(!orders.length){tbody.innerHTML=emptyRow(compact?8:10,'No orders found');return;}
+  tbody.innerHTML=orders.map(o=>{
+    const beats=o.items.map(i=>i.beatName||'—').join(', ');
+    const sid=String(o._id).slice(-8).toUpperCase();
+    return`<tr>
+      <td class="mono" style="font-size:.7rem">#${sid}</td>
+      <td><div>${o.userName||'—'}</div><div class="mono" style="font-size:.65rem;color:var(--mu)">${o.userEmail||''}</div></td>
+      <td style="max-width:140px;font-size:.8rem">${beats}</td>
       ${!compact?`<td><span class="badge b-active">${o.license}</span></td>`:''}
-      <td><span class="badge ${o.payMethod==='wise'?'b-active':'b-pending'}">${o.payMethod?.toUpperCase()}</span></td>
-      <td class="mono" style="font-size:.7rem;max-width:120px;word-break:break-all">${o.txRef}</td>
-      <td style="color:var(--green);font-family:var(--fm)">$${o.totalAmount?.toFixed(2)}</td>
+      <td><span class="badge ${o.payMethod==='wise'?'b-active':'b-pending'}">${(o.payMethod||'').toUpperCase()}</span></td>
+      <td class="mono" style="font-size:.65rem;max-width:100px;word-break:break-all">${o.txRef}</td>
+      <td style="color:var(--gr);font-family:var(--fm)">$${o.totalAmount?.toFixed(2)}</td>
       ${!compact?`<td style="font-size:.75rem">${new Date(o.createdAt).toLocaleDateString()}</td>`:''}
       <td><span class="badge b-${o.status}">${o.status}</span></td>
-      <td>
-        <div class="act-btns">
-          <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.6rem" onclick="viewOrder('${o._id}')"><i class="fas fa-eye"></i></button>
-          ${o.status==='pending'?`
-            <button class="btn btn-green" style="padding:.3rem .6rem;font-size:.6rem" onclick="confirmOrder('${o._id}')"><i class="fas fa-check"></i> Confirm</button>
-            <button class="btn btn-red" style="padding:.3rem .6rem;font-size:.6rem" onclick="rejectOrder('${o._id}')"><i class="fas fa-times"></i></button>
-          `:''}
-        </div>
-      </td>
+      <td><div class="act-btns">
+        <button class="btn btn-gh" style="padding:.3rem .6rem;font-size:.6rem" onclick="viewOrder('${o._id}')"><i class="fas fa-eye"></i></button>
+        ${o.status==='pending'?`
+          <button class="btn btn-gr" style="padding:.3rem .6rem;font-size:.6rem" onclick="confirmOrd('${o._id}')"><i class="fas fa-check"></i></button>
+          <button class="btn btn-re" style="padding:.3rem .6rem;font-size:.6rem" onclick="rejectOrd('${o._id}')"><i class="fas fa-times"></i></button>`:''}
+      </div></td>
     </tr>`;
   }).join('');
 }
-
-async function viewOrder(id) {
-  try {
-    const orders = await api('/api/orders/admin/all');
-    const o = orders.find(x=>x._id===id); if(!o) return;
-    const beats = o.items.map(i=>`<div style="padding:.3rem 0;font-family:var(--fm);font-size:.78rem">• ${i.beatName} — $${i.price?.toFixed(2)}</div>`).join('');
+async function viewOrder(id){
+  try{
+    const orders=await apiFetch('/api/orders/admin/all');
+    const o=orders.find(x=>x._id===id);if(!o)return;
+    const beats=o.items.map(i=>`<div style="padding:.3rem 0;font-family:var(--fm);font-size:.78rem">• ${i.beatName} — $${i.price?.toFixed(2)}</div>`).join('');
     document.getElementById('orderDetail').innerHTML=`
-      <div class="order-detail">
-        <div class="od-row"><span class="od-label">Order ID</span><span class="od-value">${o._id}</span></div>
-        <div class="od-row"><span class="od-label">User</span><span class="od-value">${o.userName} &lt;${o.userEmail}&gt;</span></div>
-        <div class="od-row"><span class="od-label">License</span><span class="od-value">${o.license?.toUpperCase()}</span></div>
-        <div class="od-row"><span class="od-label">Payment</span><span class="od-value">${o.payMethod?.toUpperCase()}</span></div>
-        <div class="od-row"><span class="od-label">Tx Reference</span><span class="od-value" style="word-break:break-all">${o.txRef}</span></div>
-        <div class="od-row"><span class="od-label">Total</span><span class="od-value" style="color:var(--green)">$${o.totalAmount?.toFixed(2)}</span></div>
-        <div class="od-row"><span class="od-label">Status</span><span class="od-value"><span class="badge b-${o.status}">${o.status}</span></span></div>
-        <div class="od-row"><span class="od-label">Date</span><span class="od-value">${new Date(o.createdAt).toLocaleString()}</span></div>
-        ${o.confirmedAt?`<div class="od-row"><span class="od-label">Confirmed At</span><span class="od-value">${new Date(o.confirmedAt).toLocaleString()}</span></div>`:''}
+      <div class="od">
+        <div class="od-row"><span class="od-lbl">Order ID</span><span class="od-val" style="word-break:break-all">${o._id}</span></div>
+        <div class="od-row"><span class="od-lbl">User</span><span class="od-val">${o.userName} &lt;${o.userEmail}&gt;</span></div>
+        <div class="od-row"><span class="od-lbl">License</span><span class="od-val">${(o.license||'').toUpperCase()}</span></div>
+        <div class="od-row"><span class="od-lbl">Payment</span><span class="od-val">${(o.payMethod||'').toUpperCase()}</span></div>
+        <div class="od-row"><span class="od-lbl">Tx Reference</span><span class="od-val" style="word-break:break-all">${o.txRef}</span></div>
+        <div class="od-row"><span class="od-lbl">Total</span><span class="od-val" style="color:var(--gr)">$${o.totalAmount?.toFixed(2)}</span></div>
+        <div class="od-row"><span class="od-lbl">Status</span><span class="od-val"><span class="badge b-${o.status}">${o.status}</span></span></div>
+        <div class="od-row"><span class="od-lbl">Date</span><span class="od-val">${new Date(o.createdAt).toLocaleString()}</span></div>
       </div>
-      <div style="margin-bottom:1.25rem"><div style="font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem">ITEMS PURCHASED</div>${beats}</div>
+      <div style="margin-bottom:1.25rem"><div style="font-family:var(--fm);font-size:.6rem;letter-spacing:2px;color:var(--mu);margin-bottom:.75rem">ITEMS</div>${beats}</div>
       ${o.status==='pending'?`
         <div style="display:flex;gap:.75rem">
-          <button class="btn btn-green" style="flex:1;justify-content:center" onclick="confirmOrder('${o._id}')"><i class="fas fa-check"></i> CONFIRM & SEND EMAIL</button>
-          <button class="btn btn-red" onclick="rejectOrder('${o._id}')"><i class="fas fa-times"></i> Reject</button>
+          <button class="btn btn-gr" style="flex:1;justify-content:center" onclick="confirmOrd('${o._id}')"><i class="fas fa-check"></i> CONFIRM & SEND EMAIL</button>
+          <button class="btn btn-re" onclick="rejectOrd('${o._id}')"><i class="fas fa-times"></i> Reject</button>
         </div>
-        <p style="font-size:.75rem;color:var(--muted);margin-top:.75rem;text-align:center">
-          <i class="fas fa-info-circle"></i> Confirming will send a download email to the buyer and unlock their library.
-        </p>
-      `:`<div style="text-align:center;padding:1rem;color:var(--muted);font-family:var(--fm);font-size:.7rem">Order is ${o.status.toUpperCase()}</div>`}
-    `;
+        <p style="font-size:.75rem;color:var(--mu);margin-top:.75rem;text-align:center"><i class="fas fa-info-circle"></i> Confirming sends download email to buyer and unlocks library.</p>
+      `:'<div style="text-align:center;padding:1rem;color:var(--mu);font-family:var(--fm);font-size:.7rem">Order is '+o.status.toUpperCase()+'</div>'}`;
     openMo('orderMo');
-  } catch(e) { showToast(e.message,'err'); }
+  }catch(e){showToast(e.message,'err');}
+}
+async function confirmOrd(id){
+  if(!confirm('Confirm this order?\n• Mark as confirmed\n• Send download email to buyer\n• Unlock buyer\'s library'))return;
+  try{await apiFetch('/api/orders/admin/'+id+'/confirm',{method:'PUT',body:JSON.stringify({})});showToast('✅ Confirmed! Email sent.','ok');closeMo('orderMo');loadDashboard();if(document.getElementById('page-orders').classList.contains('active'))loadOrders();}
+  catch(e){showToast(e.message,'err');}
+}
+async function rejectOrd(id){
+  if(!confirm('Reject this order?'))return;
+  try{await apiFetch('/api/orders/admin/'+id+'/reject',{method:'PUT',body:JSON.stringify({})});showToast('Rejected','ok');closeMo('orderMo');loadDashboard();if(document.getElementById('page-orders').classList.contains('active'))loadOrders();}
+  catch(e){showToast(e.message,'err');}
 }
 
-async function confirmOrder(id) {
-  if (!confirm('Confirm this order? This will:\n• Mark order as confirmed\n• Send download email to buyer\n• Unlock files in buyer\'s library')) return;
-  try {
-    await api(`/api/orders/admin/${id}/confirm`,{method:'PUT',body:JSON.stringify({})});
-    showToast('✅ Order confirmed! Email sent to buyer.','ok');
-    closeMo('orderMo');
-    loadDashboard(); if(document.getElementById('page-orders').classList.contains('active')) loadOrders();
-  } catch(e) { showToast(e.message,'err'); }
-}
-async function rejectOrder(id) {
-  if (!confirm('Reject this order?')) return;
-  try {
-    await api(`/api/orders/admin/${id}/reject`,{method:'PUT',body:JSON.stringify({})});
-    showToast('Order rejected.','ok');
-    closeMo('orderMo');
-    loadDashboard(); if(document.getElementById('page-orders').classList.contains('active')) loadOrders();
-  } catch(e) { showToast(e.message,'err'); }
-}
-
-// ── USERS ─────────────────────────────────────────────────────
-async function loadUsers() {
-  document.getElementById('usersTable').innerHTML=`<tr><td colspan="5"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div></td></tr>`;
-  try {
-    const users = await api('/api/users/admin/all');
-    document.getElementById('userCountTxt').textContent = users.length+' users';
-    document.getElementById('usersTable').innerHTML = users.length ? users.map(u=>`<tr>
-      <td>${u.name}</td>
-      <td class="mono" style="font-size:.75rem">${u.email}</td>
+async function loadUsers(){
+  document.getElementById('usersTable').innerHTML=`<tr><td colspan="5"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
+  try{
+    const users=await apiFetch('/api/users/admin/all');
+    document.getElementById('userCountTxt').textContent=users.length+' users';
+    document.getElementById('usersTable').innerHTML=users.length?users.map(u=>`<tr>
+      <td>${u.name}</td><td class="mono" style="font-size:.75rem">${u.email}</td>
       <td style="font-size:.8rem">${new Date(u.createdAt).toLocaleDateString()}</td>
       <td class="mono">${u.purchaseCount||0}</td>
-      <td><button class="btn btn-red" style="padding:.3rem .6rem;font-size:.6rem" onclick="deleteUser('${u._id}','${u.name}')"><i class="fas fa-trash"></i></button></td>
-    </tr>`).join('') : emptyRow(5,'No users registered yet');
-  } catch(e) { showToast(e.message,'err'); }
+      <td><button class="btn btn-re" style="padding:.3rem .6rem;font-size:.6rem" onclick="delUser('${u._id}','${u.name}')"><i class="fas fa-trash"></i></button></td>
+    </tr>`).join(''):emptyRow(5,'No users yet');
+  }catch(e){showToast(e.message,'err');}
 }
-async function deleteUser(id, name) {
-  if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
-  try { await api(`/api/users/admin/${id}`,{method:'DELETE'}); showToast('User deleted','ok'); loadUsers(); }
-  catch(e) { showToast(e.message,'err'); }
-}
+async function delUser(id,name){if(!confirm('Delete "'+name+'"?'))return;try{await apiFetch('/api/users/admin/'+id,{method:'DELETE'});showToast('Deleted','ok');loadUsers();}catch(e){showToast(e.message,'err');}}
 
-// ── SERVICES ──────────────────────────────────────────────────
-async function loadServices() {
-  document.getElementById('servicesTable').innerHTML=`<tr><td colspan="7"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div></td></tr>`;
-  try {
-    const svcs = await api('/api/services/admin/all');
-    document.getElementById('servicesTable').innerHTML = svcs.length ? svcs.map(s=>`<tr>
-      <td>${s.name}</td>
-      <td class="mono" style="font-size:.75rem">${s.email}</td>
-      <td>${s.service}</td>
-      <td style="font-size:.8rem;max-width:200px;color:var(--muted)">${s.message||'—'}</td>
+async function loadServices(){
+  document.getElementById('servicesTable').innerHTML=`<tr><td colspan="7"><div class="loading"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
+  try{
+    const svcs=await apiFetch('/api/services/admin/all');
+    document.getElementById('servicesTable').innerHTML=svcs.length?svcs.map(s=>`<tr>
+      <td>${s.name}</td><td class="mono" style="font-size:.75rem">${s.email}</td><td>${s.service}</td>
+      <td style="font-size:.8rem;max-width:180px;color:var(--mu)">${s.message||'—'}</td>
       <td style="font-size:.8rem">${new Date(s.createdAt).toLocaleDateString()}</td>
       <td><span class="badge b-${s.status==='completed'?'confirmed':s.status==='contacted'?'active':'pending'}">${s.status}</span></td>
-      <td>
-        <div class="act-btns">
-          ${s.status==='pending'?`<button class="btn btn-gold" style="padding:.3rem .6rem;font-size:.6rem" onclick="updateService('${s._id}','contacted')"><i class="fas fa-phone"></i> Contact</button>`:''}
-          ${s.status!=='completed'?`<button class="btn btn-green" style="padding:.3rem .6rem;font-size:.6rem" onclick="updateService('${s._id}','completed')"><i class="fas fa-check"></i> Done</button>`:''}
-        </div>
-      </td>
-    </tr>`).join('') : emptyRow(7,'No service requests yet');
-  } catch(e) { showToast(e.message,'err'); }
+      <td><div class="act-btns">
+        ${s.status==='pending'?`<button class="btn btn-go" style="padding:.3rem .6rem;font-size:.6rem" onclick="updSvc('${s._id}','contacted')"><i class="fas fa-phone"></i></button>`:''}
+        ${s.status!=='completed'?`<button class="btn btn-gr" style="padding:.3rem .6rem;font-size:.6rem" onclick="updSvc('${s._id}','completed')"><i class="fas fa-check"></i></button>`:''}
+      </div></td>
+    </tr>`).join(''):emptyRow(7,'No service requests yet');
+  }catch(e){showToast(e.message,'err');}
 }
-async function updateService(id, status) {
-  try { await api(`/api/services/admin/${id}`,{method:'PUT',body:JSON.stringify({status})}); showToast('Status updated','ok'); loadServices(); }
-  catch(e) { showToast(e.message,'err'); }
-}
+async function updSvc(id,status){try{await apiFetch('/api/services/admin/'+id,{method:'PUT',body:JSON.stringify({status})});showToast('Updated','ok');loadServices();}catch(e){showToast(e.message,'err');}}
 
-// ── UPLOAD HELPER ─────────────────────────────────────────────
-function handleFile(input, uzId, labelId) {
-  const file = input.files[0]; if(!file) return;
-  document.getElementById(labelId).textContent = '✓ '+file.name;
-  document.getElementById(uzId).classList.add('has-file');
-}
+function handleFile(input,uzId,labelId){const f=input.files[0];if(!f)return;document.getElementById(labelId).textContent='✓ '+f.name;document.getElementById(uzId).classList.add('has-file');}
+function emptyRow(cols,msg){return`<tr><td colspan="${cols}"><div class="empty-s"><i class="fas fa-inbox"></i><p>${msg}</p></div></td></tr>`;}
+function openMo(id){document.getElementById(id).classList.add('open');}
+function closeMo(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('click',e=>{if(e.target.classList.contains('mo'))closeMo(e.target.id);});
+function showFerr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000);}
+function showToast(msg,type=''){const t=document.createElement('div');t.className='t '+type;t.textContent=msg;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),4000);}
 
-// ── HELPERS ───────────────────────────────────────────────────
-function emptyRow(cols, msg) {
-  return `<tr><td colspan="${cols}"><div class="empty-state"><i class="fas fa-inbox"></i><p>${msg}</p></div></td></tr>`;
-}
-function openMo(id)  { document.getElementById(id).classList.add('open'); }
-function closeMo(id) { document.getElementById(id).classList.remove('open'); }
-document.addEventListener('click', e=>{ if(e.target.classList.contains('mo')) closeMo(e.target.id); });
-function showFerr(id,msg){ const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',4000); }
-function showToast(msg,type=''){
-  const t=document.createElement('div'); t.className=`t ${type}`; t.textContent=msg;
-  document.getElementById('toast').appendChild(t); setTimeout(()=>t.remove(),4000);
-}
-
-// Auto-start if already logged in
-if (adminToken) initAdmin();
+if(adminToken)initAdmin();
 </script>
 </body>
 </html>

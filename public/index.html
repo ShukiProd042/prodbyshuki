@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Shuki Production — Beats & Presets</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0a0a;--s:#111;--s2:#1a1a1a;--bd:#222;--ac:#ff3c00;--go:#c9a84c;--gr:#00c864;--wi:#9fe870;--pa:#ff6b00;--tx:#f0ece3;--mu:#888;--fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(10,10,10,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd)}
+.logo{font-family:var(--fd);font-size:1.6rem;letter-spacing:3px;color:var(--tx);text-decoration:none}.logo span{color:var(--ac)}
+.nav-links{display:flex;gap:2rem;list-style:none}.nav-links a{color:var(--mu);text-decoration:none;font-family:var(--fm);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;transition:color .2s}.nav-links a:hover{color:var(--tx)}
+.nav-right{display:flex;gap:1rem;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;border:none;font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border-radius:2px;transition:all .2s;text-decoration:none;padding:.55rem 1.2rem}
+.btn-gh{background:transparent;color:var(--mu);border:1px solid var(--bd)}.btn-gh:hover{color:var(--tx);border-color:var(--mu)}
+.btn-ac{background:var(--ac);color:#fff}.btn-ac:hover{background:#ff5722}
+.btn-go{background:var(--go);color:#000}.btn-go:hover{background:#e0b85c}
+#uMenu{position:relative}
+#uBtn{background:var(--s2);color:var(--tx);padding:.5rem 1rem;border:1px solid var(--bd);cursor:pointer;font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border-radius:2px;display:flex;align-items:center;gap:.5rem}
+#uDrop{display:none;position:absolute;right:0;top:calc(100% + 8px);background:var(--s);border:1px solid var(--bd);min-width:180px;border-radius:4px;overflow:hidden;z-index:200}
+#uDrop.open{display:block}
+#uDrop a,#uDrop button{display:block;width:100%;padding:.75rem 1rem;color:var(--tx);text-decoration:none;background:none;border:none;font-family:var(--fb);font-size:.85rem;cursor:pointer;text-align:left;transition:background .15s}
+#uDrop a:hover,#uDrop button:hover{background:var(--s2)}#uDrop .sep{height:1px;background:var(--bd)}
+.hero{min-height:100vh;padding-top:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,#1f0a00,var(--bg) 70%)}
+.hero-c{position:relative;z-index:2;padding:2rem}
+.hero-tag{display:inline-block;font-family:var(--fm);font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--ac);border:1px solid var(--ac);padding:.3rem .8rem;margin-bottom:2rem;animation:fu .8s both}
+.hero-title{font-family:var(--fd);font-size:clamp(4rem,14vw,12rem);line-height:.95;letter-spacing:4px;animation:fu .8s .15s both}.hero-title .l2{color:var(--ac);display:block}
+.hero-sub{margin-top:1.5rem;color:var(--mu);font-size:1rem;max-width:480px;margin-inline:auto;line-height:1.7;animation:fu .8s .3s both}
+.hero-cta{margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fu .8s .45s both}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:.6rem;letter-spacing:3px;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.hero-scroll::after{content:'';width:1px;height:40px;background:linear-gradient(180deg,var(--mu),transparent);animation:sl 1.5s infinite}
+@keyframes sl{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+section{padding:6rem 2rem}.container{max-width:1200px;margin:0 auto}
+.s-label{font-family:var(--fm);font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--ac);margin-bottom:.75rem}
+.s-title{font-family:var(--fd);font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:2px;line-height:1}
+.s-header{margin-bottom:3.5rem}.divider{width:48px;height:2px;background:var(--ac);margin-top:1rem}
+.filters{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.fb{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:.45rem 1rem;background:transparent;color:var(--mu);border:1px solid var(--bd);border-radius:2px;cursor:pointer;transition:all .2s}
+.fb:hover,.fb.active{color:var(--tx);border-color:var(--ac);background:rgba(255,60,0,.08)}
+.beats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px}
+.beat-card{background:var(--s);border:1px solid var(--bd);padding:1.5rem;transition:border-color .2s,transform .2s;position:relative;overflow:hidden}
+.beat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.beat-card:hover{border-color:#333;transform:translateY(-2px)}.beat-card:hover::before{transform:scaleX(1)}
+.bb{display:inline-block;font-family:var(--fm);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;padding:.25rem .6rem;border-radius:2px;margin-bottom:1rem}
+.bbt{background:rgba(255,60,0,.15);color:var(--ac);border:1px solid rgba(255,60,0,.3)}
+.bbr{background:rgba(201,168,76,.15);color:var(--go);border:1px solid rgba(201,168,76,.3)}
+.bbd{background:rgba(100,100,255,.15);color:#8888ff;border:1px solid rgba(100,100,255,.3)}
+.bbh{background:rgba(0,200,100,.15);color:var(--gr);border:1px solid rgba(0,200,100,.3)}
+.bbp{background:rgba(200,0,200,.15);color:#cc44cc;border:1px solid rgba(200,0,200,.3)}
+.bn{font-family:var(--fd);font-size:1.4rem;letter-spacing:1px;margin-bottom:.3rem}
+.bm{font-family:var(--fm);font-size:.65rem;color:var(--mu);letter-spacing:1px;margin-bottom:1rem}
+.bw{height:48px;background:var(--s2);border-radius:2px;margin-bottom:1rem;overflow:hidden;position:relative;cursor:pointer;display:flex;align-items:center;padding:0 .5rem;gap:2px}
+.wb{flex:1;background:var(--ac);opacity:.4;border-radius:1px;transition:opacity .2s}.bw:hover .wb{opacity:.7}
+.bprog{position:absolute;left:0;top:0;bottom:0;background:rgba(255,60,0,.15);width:0;pointer-events:none}
+.bf{display:flex;align-items:center;justify-content:space-between}
+.bprice{font-family:var(--fd);font-size:1.8rem;color:var(--ac)}.bprice .cent{font-size:1rem}
+.bac{display:flex;gap:.5rem}
+.ib{width:36px;height:36px;border-radius:2px;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.85rem;transition:all .2s}
+.ib:hover{color:var(--tx);border-color:var(--mu)}.ib.play{background:var(--ac);color:#fff;border-color:var(--ac);font-size:1rem}.ib.play:hover{background:#ff5722}
+.lock-hint{font-family:var(--fm);font-size:.55rem;letter-spacing:1px;color:var(--mu);display:flex;align-items:center;gap:.3rem;margin-top:.6rem}
+.loading-b{text-align:center;padding:4rem;color:var(--mu);font-family:var(--fm);font-size:.75rem;letter-spacing:2px;grid-column:1/-1}
+#pBar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,10,10,.97);border-top:1px solid var(--bd);padding:.75rem 2rem;display:none;align-items:center;gap:1.5rem;backdrop-filter:blur(16px)}
+#pBar.vis{display:flex}
+#pTitle{font-family:var(--fd);font-size:1rem;letter-spacing:1px;min-width:140px}#pMeta{font-family:var(--fm);font-size:.6rem;color:var(--mu)}
+#pLine{flex:1;height:3px;background:var(--bd);border-radius:2px;cursor:pointer;position:relative}
+#pProg{height:100%;background:var(--ac);border-radius:2px;width:0;pointer-events:none}
+#pTime{font-family:var(--fm);font-size:.65rem;color:var(--mu);white-space:nowrap}
+.pbtn{background:none;border:none;color:var(--tx);cursor:pointer;font-size:1.1rem;padding:.25rem;transition:color .2s}.pbtn:hover{color:var(--ac)}
+#pPlay{font-size:1.4rem;color:var(--ac)}#pVol{width:80px;accent-color:var(--ac)}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px}
+.sc{background:var(--bg);padding:2rem;border:1px solid var(--bd);transition:border-color .2s}.sc:hover{border-color:var(--go)}
+.si{width:48px;height:48px;border-radius:4px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--go);margin-bottom:1.5rem}
+.st{font-family:var(--fd);font-size:1.4rem;letter-spacing:1px;margin-bottom:.75rem}
+.sd{color:var(--mu);font-size:.9rem;line-height:1.7;margin-bottom:1.5rem}.sp{font-family:var(--fm);font-size:.75rem;color:var(--go);letter-spacing:2px}
+.about{padding:5rem 2rem;background:linear-gradient(135deg,#0f0400,#0a0a0a 60%);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.about-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.at{font-family:var(--fd);font-size:clamp(2rem,4vw,3.5rem);letter-spacing:2px;margin-bottom:1.5rem}
+.ab{color:var(--mu);line-height:1.8;font-size:.95rem}
+.stg{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.sb{background:var(--s);border:1px solid var(--bd);padding:1.5rem}
+.sn{font-family:var(--fd);font-size:2.5rem;color:var(--ac)}.sl{font-family:var(--fm);font-size:.6rem;letter-spacing:3px;color:var(--mu);margin-top:.25rem}
+#cOv{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none}#cOv.open{display:block}
+#cBar{position:fixed;right:0;top:0;bottom:0;width:420px;background:var(--s);border-left:1px solid var(--bd);z-index:301;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column}
+#cBar.open{transform:translateX(0)}.ch{padding:1.5rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.ch h3{font-family:var(--fd);font-size:1.5rem;letter-spacing:1px}.cbody{flex:1;overflow-y:auto;padding:1.5rem}
+.ci{display:flex;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--bd)}
+.ci-info{flex:1}.ci-name{font-family:var(--fd);font-size:1rem;letter-spacing:1px}.ci-price{font-family:var(--fm);font-size:.75rem;color:var(--ac)}
+.cr{background:none;border:none;color:var(--mu);cursor:pointer;font-size:.9rem;transition:color .2s}.cr:hover{color:var(--ac)}
+.cfoot{padding:1.5rem;border-top:1px solid var(--bd)}.ct{display:flex;justify-content:space-between;font-family:var(--fd);font-size:1.5rem;margin-bottom:1.5rem}.ct span:last-child{color:var(--ac)}
+.empty{text-align:center;padding:3rem 1rem;color:var(--mu)}.empty i{font-size:2rem;margin-bottom:1rem;display:block}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}.mo.open{display:flex}
+.md{background:var(--s);border:1px solid var(--bd);width:100%;max-width:480px;border-radius:4px;overflow:hidden;max-height:94vh;display:flex;flex-direction:column}
+.mh{padding:1.5rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.mh h3{font-family:var(--fd);font-size:1.5rem;letter-spacing:1px}.mb{padding:1.5rem;overflow-y:auto}
+.mtabs{display:flex;margin-bottom:1.5rem;border-bottom:1px solid var(--bd)}
+.mtab{flex:1;padding:.75rem;background:none;border:none;color:var(--mu);font-family:var(--fm);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.mtab.active{color:var(--ac);border-bottom-color:var(--ac)}
+.fg{margin-bottom:1rem}.fg label{display:block;font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:.4rem}
+.fg input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:.75rem 1rem;border-radius:2px;font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .2s}.fg input:focus{border-color:var(--ac)}
+.ferr{color:var(--ac);font-size:.8rem;margin-top:.4rem;display:none}
+.cstep{display:none}.cstep.active{display:block}
+.lo{display:grid;gap:.75rem;margin-bottom:1.5rem}
+.lopt{border:1px solid var(--bd);padding:1rem;border-radius:2px;cursor:pointer;transition:all .2s}.lopt:hover,.lopt.sel{border-color:var(--ac);background:rgba(255,60,0,.05)}
+.lopt h4{font-family:var(--fm);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem}.lopt p{color:var(--mu);font-size:.8rem}.lopt .lp{color:var(--ac);font-family:var(--fd);font-size:1.2rem;margin-top:.5rem}
+.pm-lbl{font-family:var(--fm);font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--mu);margin-bottom:.75rem}
+.pm-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
+.pm-card{border:2px solid var(--bd);border-radius:6px;padding:1.1rem .75rem;cursor:pointer;text-align:center;background:var(--s2);transition:all .25s}.pm-card:hover{border-color:#444}
+.pm-card.aw{border-color:var(--wi);background:rgba(159,232,112,.07)}.pm-card.ap{border-color:var(--pa);background:rgba(255,107,0,.07)}
+.pm-icon{font-size:1.6rem;margin-bottom:.4rem}.pm-name{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase}
+.wc{color:var(--wi)}.pc{color:var(--pa)}
+.pdb{border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;border:1px solid;display:none}.pdb.show{display:block}
+.pdb.wb{border-color:rgba(159,232,112,.3);background:rgba(159,232,112,.05)}.pdb.pb{border-color:rgba(255,107,0,.3);background:rgba(255,107,0,.05)}
+.bt{font-family:var(--fm);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.pa{font-family:var(--fd);font-size:2.2rem;margin:.5rem 0 .25rem}
+.dr{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.05)}.dr:last-of-type{border-bottom:none}
+.dr .dl{font-size:.78rem;color:var(--mu)}.dr .dv{font-family:var(--fm);font-size:.78rem;color:var(--tx);display:flex;align-items:center;gap:.5rem}
+.cpb{background:none;border:1px solid var(--bd);color:var(--mu);padding:.18rem .5rem;border-radius:2px;cursor:pointer;font-size:.6rem;font-family:var(--fm);transition:all .2s}.cpb:hover{color:var(--tx);border-color:#555}
+.pnote{font-size:.78rem;color:var(--mu);line-height:1.65;margin-top:.85rem;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.06)}
+.pw{margin-top:1.25rem}.pw label{display:block;font-family:var(--fm);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:.4rem}
+.pw input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:.75rem 1rem;border-radius:2px;font-family:var(--fm);font-size:.85rem;outline:none;transition:border-color .2s}.pw input:focus{border-color:var(--ac)}
+.pwnote{font-size:.75rem;color:var(--mu);margin-top:.5rem;line-height:1.6}
+.succ{text-align:center;padding:1.5rem 0}.succ-icon{font-size:3.5rem;color:var(--gr);margin-bottom:1rem}
+.succ-title{font-family:var(--fd);font-size:2.2rem;letter-spacing:2px;margin-bottom:.75rem}
+.succ-ref{font-family:var(--fm);font-size:.75rem;background:var(--s2);border:1px solid var(--bd);padding:.5rem 1rem;border-radius:2px;display:inline-block;margin-bottom:1rem;color:var(--go)}
+.succ-body{color:var(--mu);line-height:1.75;font-size:.88rem;margin-bottom:1.75rem}
+.li{display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--bd)}
+.li-icon{width:40px;height:40px;background:rgba(255,60,0,.1);border:1px solid rgba(255,60,0,.2);border-radius:2px;display:flex;align-items:center;justify-content:center;color:var(--ac);flex-shrink:0}
+#toast{position:fixed;top:80px;right:1.5rem;z-index:500;display:flex;flex-direction:column;gap:.5rem}
+.t{background:var(--s);border:1px solid var(--bd);border-left:3px solid var(--ac);padding:.75rem 1.25rem;border-radius:2px;font-size:.85rem;animation:si .3s both;max-width:320px}
+.t.ok{border-left-color:var(--gr)}.t.err{border-left-color:var(--ac)}
+@keyframes si{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+footer{padding:3rem 2rem;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.fl{font-family:var(--fd);font-size:1.2rem;letter-spacing:3px}.fl span{color:var(--ac)}
+.flinks{display:flex;gap:1.5rem}.flinks a{color:var(--mu);text-decoration:none;font-size:.8rem;transition:color .2s}.flinks a:hover{color:var(--tx)}
+.fc{font-family:var(--fm);font-size:.6rem;color:var(--mu);letter-spacing:2px}
+@media(max-width:768px){.nav-links{display:none}.about-in{grid-template-columns:1fr;gap:2rem}#cBar{width:100%}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#" class="logo">SHUKI<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#beats">Beats</a></li>
+    <li><a href="#presets">Presets</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn btn-gh" onclick="openCart()"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCount">0</span></button>
+    <div id="uMenu">
+      <div id="gBtns"><button class="btn btn-ac" onclick="openAuth()"><i class="fas fa-user"></i> Sign In</button></div>
+      <div id="uBtns" style="display:none">
+        <button id="uBtn" onclick="togDrop()"><i class="fas fa-user-circle"></i><span id="uName"></span><i class="fas fa-chevron-down" style="font-size:.5rem"></i></button>
+        <div id="uDrop">
+          <a href="#" onclick="openLibrary();return false"><i class="fas fa-music" style="width:16px"></i> My Library</a>
+          <div class="sep"></div>
+          <button onclick="logout()"><i class="fas fa-sign-out-alt" style="width:16px"></i> Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-c">
+    <div class="hero-tag">// Professional Music Production</div>
+    <h1 class="hero-title">SHUKI<span class="l2">PRODUCTION</span></h1>
+    <p class="hero-sub">Premium trap beats, vocal presets, mixing & mastering. Elevate your sound with industry-grade production.</p>
+    <div class="hero-cta">
+      <a href="#beats" class="btn btn-ac" style="padding:.75rem 2rem;font-size:.75rem">Browse Beats</a>
+      <a href="#services" class="btn btn-gh" style="padding:.75rem 2rem;font-size:.75rem">Our Services</a>
+    </div>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<section id="beats">
+  <div class="container">
+    <div class="s-header"><div class="s-label">// 01 — Catalog</div><h2 class="s-title">BEATS</h2><div class="divider"></div></div>
+    <div class="filters" id="beatFilters">
+      <button class="fb active" data-f="all">All</button>
+      <button class="fb" data-f="trap">Trap</button>
+      <button class="fb" data-f="drill">Drill</button>
+      <button class="fb" data-f="rnb">R&B</button>
+      <button class="fb" data-f="hiphop">Hip-Hop</button>
+    </div>
+    <div class="beats-grid" id="beatsGrid"><div class="loading-b"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:1rem"></i>Loading beats...</div></div>
+  </div>
+</section>
+
+<section id="presets" style="background:var(--s)">
+  <div class="container">
+    <div class="s-header"><div class="s-label">// 02 — Vocal Tools</div><h2 class="s-title">PRESETS</h2><div class="divider"></div></div>
+    <div class="beats-grid" id="presetsGrid"><div class="loading-b"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:1rem"></i>Loading presets...</div></div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="s-header"><div class="s-label">// 03 — Professional</div><h2 class="s-title">SERVICES</h2><div class="divider"></div></div>
+    <div class="sg">
+      <div class="sc"><div class="si"><i class="fas fa-sliders-h"></i></div><div class="st">Mix & Master</div><div class="sd">Professional mixing and mastering for your tracks. Industry-standard sound, ready for streaming platforms.</div><div class="sp">STARTING AT $49.99</div><br><button class="btn btn-go" style="margin-top:1rem" onclick="bookService('Mix & Master')">Book Now</button></div>
+      <div class="sc"><div class="si"><i class="fas fa-drum"></i></div><div class="st">Beat Making</div><div class="sd">Custom beat creation tailored to your style and vision. Exclusive rights included.</div><div class="sp">STARTING AT $79.99</div><br><button class="btn btn-go" style="margin-top:1rem" onclick="bookService('Custom Beat')">Book Now</button></div>
+      <div class="sc"><div class="si"><i class="fas fa-microphone-alt"></i></div><div class="st">Vocal Production</div><div class="sd">Complete vocal production including tuning, layering, and effects processing.</div><div class="sp">STARTING AT $39.99</div><br><button class="btn btn-go" style="margin-top:1rem" onclick="bookService('Vocal Production')">Book Now</button></div>
+      <div class="sc"><div class="si"><i class="fas fa-compact-disc"></i></div><div class="st">Full EP Package</div><div class="sd">Production, mixing and mastering for a full EP (up to 7 tracks). Best value package.</div><div class="sp">STARTING AT $249.99</div><br><button class="btn btn-go" style="margin-top:1rem" onclick="bookService('EP Package')">Book Now</button></div>
+    </div>
+  </div>
+</section>
+
+<div class="about" id="about">
+  <div class="about-in">
+    <div><h2 class="at">CRAFTED FOR<br><span style="color:var(--ac)">ARTISTS</span></h2><p class="ab">Shuki Production delivers premium music production tools and services. From radio-ready beats to studio-grade vocal presets — everything you need to take your music to the next level.</p></div>
+    <div class="stg"><div class="sb"><div class="sn">500+</div><div class="sl">Beats Sold</div></div><div class="sb"><div class="sn">200+</div><div class="sl">Artists</div></div><div class="sb"><div class="sn">50+</div><div class="sl">Presets</div></div><div class="sb"><div class="sn">5★</div><div class="sl">Rating</div></div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fl">SHUKI<span>.</span></div>
+  <div class="flinks"><a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Spotify</a><a href="#">Contact</a></div>
+  <div class="fc">© 2025 SHUKI PRODUCTION. ALL RIGHTS RESERVED.</div>
+</footer>
+
+<!-- PLAYER -->
+<div id="pBar">
+  <div><div id="pTitle">—</div><div id="pMeta">—</div></div>
+  <button class="pbtn" onclick="togPlay()"><i id="pPlayI" class="fas fa-play"></i></button>
+  <div id="pLine" onclick="seekA(event)"><div id="pProg"></div></div>
+  <div id="pTime">0:00 / 0:00</div>
+  <input type="range" id="pVol" min="0" max="1" step="0.01" value="0.8" oninput="setVol(this.value)"/>
+  <button class="pbtn" onclick="closePlayer()"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- CART -->
+<div id="cOv" onclick="closeCart()"></div>
+<div id="cBar">
+  <div class="ch"><h3>YOUR CART</h3><button class="ib" onclick="closeCart()"><i class="fas fa-times"></i></button></div>
+  <div class="cbody" id="cBody"></div>
+  <div class="cfoot" id="cFoot"></div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="mo" id="authMo">
+  <div class="md">
+    <div class="mh"><h3 id="authTitle">SIGN IN</h3><button class="ib" onclick="closeMo('authMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="mtabs"><button class="mtab active" onclick="swTab('login')">Sign In</button><button class="mtab" onclick="swTab('reg')">Register</button></div>
+      <div id="loginF">
+        <div class="fg"><label>Email</label><input type="email" id="lEmail" placeholder="your@email.com"/></div>
+        <div class="fg"><label>Password</label><input type="password" id="lPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+        <div class="ferr" id="lErr"></div>
+        <button class="btn btn-ac" style="width:100%;padding:.75rem;justify-content:center" onclick="doLogin()">SIGN IN <i class="fas fa-arrow-right"></i></button>
+      </div>
+      <div id="regF" style="display:none">
+        <div class="fg"><label>Full Name</label><input type="text" id="rName" placeholder="Your name"/></div>
+        <div class="fg"><label>Email</label><input type="email" id="rEmail" placeholder="your@email.com"/></div>
+        <div class="fg"><label>Password</label><input type="password" id="rPass" placeholder="Min. 8 characters" onkeydown="if(event.key==='Enter')doReg()"/></div>
+        <div class="ferr" id="rErr"></div>
+        <button class="btn btn-ac" style="width:100%;padding:.75rem;justify-content:center" onclick="doReg()">CREATE ACCOUNT <i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="mo" id="coMo">
+  <div class="md" style="max-width:560px">
+    <div class="mh"><h3>CHECKOUT</h3><button class="ib" onclick="closeMo('coMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="cstep active" id="cs1">
+        <p style="color:var(--mu);font-size:.85rem;margin-bottom:1.25rem">Choose your license type:</p>
+        <div class="lo" id="licOpts"></div>
+        <button class="btn btn-ac" style="width:100%;padding:.75rem;justify-content:center" onclick="goStep(2)">CONTINUE <i class="fas fa-arrow-right"></i></button>
+      </div>
+      <div class="cstep" id="cs2">
+        <div class="pm-lbl">Choose Payment Method</div>
+        <div class="pm-grid">
+          <div class="pm-card" id="pmW" onclick="selPay('wise')"><div class="pm-icon wc"><i class="fas fa-dove"></i></div><div class="pm-name wc">Wise</div></div>
+          <div class="pm-card" id="pmP" onclick="selPay('payoneer')"><div class="pm-icon pc"><i class="fas fa-bolt"></i></div><div class="pm-name pc">Payoneer</div></div>
+        </div>
+        <div class="pdb wb" id="wBox">
+          <div class="bt wc"><i class="fas fa-dove"></i> Pay via Wise</div>
+          <div class="pa wc" id="wAmt">$0.00</div>
+          <div style="font-size:.72rem;color:var(--mu);margin-bottom:.85rem">Send exactly this amount in USD</div>
+          <div class="dr"><span class="dl">Wise Tag</span><span class="dv">@andrejs1243 <button class="cpb" onclick="cp('@andrejs1243')"><i class="fas fa-copy"></i></button></span></div>
+          <div class="pnote"><strong style="color:var(--wi)">How to pay:</strong> Open Wise → Send Money → search <strong>@andrejs1243</strong> → enter amount → use your email as reference → send. Paste your Transaction ID below.</div>
+        </div>
+        <div class="pdb pb" id="pBox">
+          <div class="bt pc"><i class="fas fa-bolt"></i> Pay via Payoneer</div>
+          <div class="pa pc" id="pAmt">$0.00</div>
+          <div style="font-size:.72rem;color:var(--mu);margin-bottom:.85rem">Send exactly this amount in USD</div>
+          <div class="dr"><span class="dl">Email</span><span class="dv">shundovskishuki1@gmail.com <button class="cpb" onclick="cp('shundovskishuki1@gmail.com')"><i class="fas fa-copy"></i></button></span></div>
+          <div class="dr"><span class="dl">Customer ID</span><span class="dv">79763735 <button class="cpb" onclick="cp('79763735')"><i class="fas fa-copy"></i></button></span></div>
+          <div class="pnote"><strong style="color:var(--pa)">How to pay:</strong> Open Payoneer → Pay → search <strong>shundovskishuki1@gmail.com</strong> or ID <strong>79763735</strong> → enter amount → your email as reference → send. Paste Reference ID below.</div>
+        </div>
+        <div class="pw" id="pwrap" style="display:none">
+          <label>Transaction / Reference ID *</label>
+          <input type="text" id="txRef" placeholder="Paste your transaction ID here"/>
+          <div class="pwnote"><i class="fas fa-clock" style="color:var(--go)"></i> Order confirmed within <strong>1–12 hours</strong>. Download links sent to your email and added to My Library.</div>
+          <button class="btn btn-ac" style="width:100%;padding:.75rem;justify-content:center;margin-top:1rem" id="submitBtn" onclick="submitOrder()"><i class="fas fa-paper-plane"></i> SUBMIT ORDER</button>
+        </div>
+        <button class="btn btn-gh" style="margin-top:.75rem;font-size:.6rem" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+      </div>
+      <div class="cstep" id="cs3">
+        <div class="succ">
+          <div class="succ-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="succ-title">ORDER SUBMITTED!</div>
+          <div class="succ-ref" id="oRef"></div>
+          <div class="succ-body">Payment reference received. We'll verify within <strong>1–12 hours</strong> and send download links to <strong id="sEmail"></strong>.<br><br>Check status in <strong>My Library</strong>.</div>
+          <button class="btn btn-ac" style="padding:.75rem 2rem" onclick="closeMo('coMo');openLibrary()">VIEW MY LIBRARY</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIBRARY MODAL -->
+<div class="mo" id="libMo">
+  <div class="md" style="max-width:600px">
+    <div class="mh"><h3>MY LIBRARY</h3><button class="ib" onclick="closeMo('libMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mb" id="libBody" style="max-height:60vh;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="mo" id="svcMo">
+  <div class="md">
+    <div class="mh"><h3 id="svcTitle">BOOK SERVICE</h3><button class="ib" onclick="closeMo('svcMo')"><i class="fas fa-times"></i></button></div>
+    <div class="mb">
+      <div class="fg"><label>Your Name</label><input type="text" id="sName" placeholder="Your name"/></div>
+      <div class="fg"><label>Email</label><input type="email" id="sEmail2" placeholder="your@email.com"/></div>
+      <div class="fg"><label>Message (optional)</label><input type="text" id="sMsg" placeholder="Tell us about your project"/></div>
+      <div class="ferr" id="sErr"></div>
+      <button class="btn btn-ac" style="width:100%;padding:.75rem;justify-content:center" onclick="submitService()">SEND REQUEST <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<audio id="audio" preload="none"></audio>
+
+<script>
+const LICS=[{id:'lease',name:'Lease License',desc:'Non-exclusive. Up to 50k streams, 5k downloads.',mult:1},{id:'premium',name:'Premium Lease',desc:'Non-exclusive. Unlimited streams & downloads.',mult:1.8},{id:'exclusive',name:'Exclusive Rights',desc:'Full exclusive ownership. Beat removed from store.',mult:5}];
+let token=localStorage.getItem('sk_tok')||null;
+let user=JSON.parse(localStorage.getItem('sk_usr')||'null');
+let cart=JSON.parse(localStorage.getItem('sk_cart')||'[]');
+let beats=[],presets=[],curBeat=null,playing=false,selLic=LICS[0],selPm=null,curSvc='';
+const audio=document.getElementById('audio');
+
+async function apiFetch(path,opts={}){
+  try {
+    const headers={'Content-Type':'application/json'};
+    if(token) headers['Authorization']='Bearer '+token;
+    Object.assign(headers,opts.headers||{});
+    const res = await fetch(path,{...opts,headers});
+    let data = {};
+    try { data = await res.json(); } catch(e) {}
+    if(!res.ok) throw new Error(data.error || 'Request failed ('+res.status+')');
+    return data;
+  } catch(e) {
+    if(e.message.includes('fetch')) throw new Error('Cannot connect to server. Is it running?');
+    throw e;
+  }
+}
+
+async function init(){updateUserUI();updateCartCount();loadBeats();loadPresets();}
+
+async function loadBeats(){
+  try{beats=await apiFetch('/api/beats?type=beat');renderBeats();}
+  catch(e){document.getElementById('beatsGrid').innerHTML=`<div class="loading-b" style="color:var(--ac)"><i class="fas fa-exclamation-circle" style="font-size:1.5rem;display:block;margin-bottom:1rem"></i>${e.message}<br><small style="font-size:.65rem;margin-top:.5rem;display:block">Make sure the server is running</small></div>`;}
+}
+async function loadPresets(){
+  try{presets=await apiFetch('/api/beats?type=preset');renderPresets();}
+  catch(e){document.getElementById('presetsGrid').innerHTML=`<div class="loading-b" style="color:var(--ac)">${e.message}</div>`;}
+}
+
+function bcls(g){return{trap:'bbt',rnb:'bbr',drill:'bbd',hiphop:'bbh',preset:'bbp',mix:'bbp',master:'bbp',bundle:'bbr'}[g]||'bbt';}
+function wave(seed){return Array.from({length:32},(_,i)=>`<div class="wb" style="height:${20+Math.abs(Math.sin(seed*i+i*.7))*60}%"></div>`).join('');}
+
+function card(b){
+  const[d,c]=b.price.toFixed(2).split('.');
+  return`<div class="beat-card" data-genre="${b.genre}" data-id="${b._id}">
+    <span class="bb ${bcls(b.genre)}">${b.genre.toUpperCase()}</span>
+    <div class="bn">${b.name}</div>
+    <div class="bm">${b.bpm?b.bpm+' BPM · ':''}${b.key||''}</div>
+    <div class="bw" onclick="playBeat('${b._id}')">
+      <div class="bprog" id="prog-${b._id}"></div>
+      ${wave((b._id.charCodeAt(0)||1)*13)}
+    </div>
+    <div class="bf">
+      <div class="bprice">$${d}<span class="cent">.${c}</span></div>
+      <div class="bac">
+        <button class="ib play" onclick="playBeat('${b._id}')"><i class="fas fa-play" id="icon-${b._id}"></i></button>
+        <button class="ib" onclick="addCart('${b._id}')" title="${user?'Add to cart':'Sign in to buy'}">
+          <i class="fas ${user?'fa-cart-plus':'fa-lock'}"></i>
+        </button>
+      </div>
+    </div>
+    ${!user?'<div class="lock-hint"><i class="fas fa-lock"></i> Sign in to purchase</div>':''}
+  </div>`;
+}
+function renderBeats(){document.getElementById('beatsGrid').innerHTML=beats.length?beats.map(card).join(''):'<div class="loading-b">No beats added yet.</div>';}
+function renderPresets(){document.getElementById('presetsGrid').innerHTML=presets.length?presets.map(card).join(''):'<div class="loading-b">No presets added yet.</div>';}
+
+document.getElementById('beatFilters').addEventListener('click',e=>{
+  const b=e.target.closest('.fb');if(!b)return;
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  const f=b.dataset.f;
+  document.querySelectorAll('#beatsGrid .beat-card').forEach(c=>c.style.display=(f==='all'||c.dataset.genre===f)?'':'none');
+});
+
+function playBeat(id){
+  const b=[...beats,...presets].find(x=>x._id===id);if(!b)return;
+  if(curBeat&&curBeat._id===id){togPlay();return;}
+  if(curBeat){document.getElementById('icon-'+curBeat._id)?.classList.replace('fa-pause','fa-play');}
+  curBeat=b;
+  if(!b.previewFile){showToast('No preview available','err');return;}
+  audio.src='/previews/'+b.previewFile;
+  audio.volume=parseFloat(document.getElementById('pVol').value);
+  audio.play().catch(e=>showToast('Playback error: '+e.message,'err'));
+  playing=true;
+  document.getElementById('pBar').classList.add('vis');
+  document.getElementById('pTitle').textContent=b.name;
+  document.getElementById('pMeta').textContent=(b.bpm?b.bpm+' BPM · ':'')+( b.key||'');
+  document.getElementById('pPlayI').classList.replace('fa-play','fa-pause');
+  document.getElementById('icon-'+id)?.classList.replace('fa-play','fa-pause');
+  audio.ontimeupdate=updProg;
+  audio.onended=()=>{playing=false;document.getElementById('pPlayI').classList.replace('fa-pause','fa-play');document.getElementById('icon-'+id)?.classList.replace('fa-pause','fa-play');};
+}
+function togPlay(){if(!curBeat)return;if(playing){audio.pause();playing=false;document.getElementById('pPlayI').classList.replace('fa-pause','fa-play');document.getElementById('icon-'+curBeat._id)?.classList.replace('fa-pause','fa-play');}else{audio.play();playing=true;document.getElementById('pPlayI').classList.replace('fa-play','fa-pause');document.getElementById('icon-'+curBeat._id)?.classList.replace('fa-play','fa-pause');}}
+function updProg(){const pct=(audio.currentTime/audio.duration)*100||0;document.getElementById('pProg').style.width=pct+'%';const fmt=s=>{const m=Math.floor(s/60),sc=Math.floor(s%60);return m+':'+(sc<10?'0':'')+sc;};document.getElementById('pTime').textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration||0);const p=document.getElementById('prog-'+(curBeat?._id));if(p)p.style.width=pct+'%';}
+function seekA(e){const r=e.currentTarget.getBoundingClientRect();audio.currentTime=((e.clientX-r.left)/r.width)*(audio.duration||0);}
+function setVol(v){audio.volume=v;}
+function closePlayer(){audio.pause();playing=false;document.getElementById('pBar').classList.remove('vis');if(curBeat){document.getElementById('icon-'+curBeat._id)?.classList.replace('fa-pause','fa-play');curBeat=null;}}
+
+function addCart(id){if(!user){showToast('Sign in first','err');openAuth();return;}const b=[...beats,...presets].find(x=>x._id===id);if(!b)return;if(cart.find(c=>c._id===id)){showToast('Already in cart','err');return;}cart.push({...b});saveCart();updateCartCount();showToast('"'+b.name+'" added to cart','ok');}
+function removeCart(id){cart=cart.filter(c=>c._id!==id);saveCart();updateCartCount();renderCart();}
+function saveCart(){localStorage.setItem('sk_cart',JSON.stringify(cart));}
+function updateCartCount(){document.getElementById('cartCount').textContent=cart.length;}
+function cartTotal(){return cart.reduce((s,c)=>s+c.price,0);}
+function openCart(){document.getElementById('cOv').classList.add('open');document.getElementById('cBar').classList.add('open');renderCart();}
+function closeCart(){document.getElementById('cOv').classList.remove('open');document.getElementById('cBar').classList.remove('open');}
+function renderCart(){const bd=document.getElementById('cBody'),ft=document.getElementById('cFoot');if(!cart.length){bd.innerHTML='<div class="empty"><i class="fas fa-shopping-cart"></i><p>Your cart is empty</p></div>';ft.innerHTML='';return;}bd.innerHTML=cart.map(c=>`<div class="ci"><div class="ci-info"><div class="ci-name">${c.name}</div><div class="ci-price">$${c.price.toFixed(2)}</div></div><button class="cr" onclick="removeCart('${c._id}')"><i class="fas fa-times"></i></button></div>`).join('');ft.innerHTML=`<div class="ct"><span>TOTAL</span><span>$${cartTotal().toFixed(2)}</span></div><button class="btn btn-ac" style="width:100%;padding:.75rem;justify-content:center" onclick="openCheckout()">CHECKOUT <i class="fas fa-arrow-right"></i></button>`;}
+
+function openCheckout(){if(!user){closeCart();openAuth();showToast('Sign in first','err');return;}if(!cart.length){showToast('Cart is empty','err');return;}closeCart();selLic=LICS[0];selPm=null;document.querySelectorAll('.cstep').forEach(s=>s.classList.remove('active'));document.getElementById('cs1').classList.add('active');document.getElementById('wBox').classList.remove('show');document.getElementById('pBox').classList.remove('show');document.getElementById('pwrap').style.display='none';document.getElementById('txRef').value='';document.getElementById('pmW').className='pm-card';document.getElementById('pmP').className='pm-card';renderLics();openMo('coMo');}
+function renderLics(){const base=cartTotal();document.getElementById('licOpts').innerHTML=LICS.map(l=>`<div class="lopt${l.id===selLic.id?' sel':''}" onclick="pickLic('${l.id}')"><h4>${l.name}</h4><p>${l.desc}</p><div class="lp">$${(base*l.mult).toFixed(2)}</div></div>`).join('');}
+function pickLic(id){selLic=LICS.find(l=>l.id===id);renderLics();}
+function goStep(n){document.querySelectorAll('.cstep').forEach(s=>s.classList.remove('active'));document.getElementById('cs'+n).classList.add('active');if(n===2){const t=(cartTotal()*selLic.mult).toFixed(2);document.getElementById('wAmt').textContent='$'+t;document.getElementById('pAmt').textContent='$'+t;}}
+function selPay(m){selPm=m;document.getElementById('pmW').className='pm-card'+(m==='wise'?' aw':'');document.getElementById('pmP').className='pm-card'+(m==='payoneer'?' ap':'');document.getElementById('wBox').classList.toggle('show',m==='wise');document.getElementById('pBox').classList.toggle('show',m==='payoneer');document.getElementById('pwrap').style.display='block';}
+async function submitOrder(){
+  if(!selPm){showToast('Select payment method','err');return;}
+  const txRef=document.getElementById('txRef').value.trim();
+  if(!txRef){showToast('Paste your transaction reference','err');return;}
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Submitting...';
+  try{
+    const res=await apiFetch('/api/orders',{method:'POST',body:JSON.stringify({items:cart.map(c=>({beatId:c._id})),license:selLic.id,payMethod:selPm,txRef})});
+    cart=[];saveCart();updateCartCount();
+    document.getElementById('oRef').textContent='Order ID: '+res.orderId;
+    document.getElementById('sEmail').textContent=user.email;
+    goStep(3);
+  }catch(e){showToast(e.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> SUBMIT ORDER';}
+}
+
+function openAuth(){openMo('authMo');}
+function swTab(t){document.querySelectorAll('.mtab').forEach((x,i)=>x.classList.toggle('active',i===(t==='login'?0:1)));document.getElementById('loginF').style.display=t==='login'?'':'none';document.getElementById('regF').style.display=t==='reg'?'':'none';document.getElementById('authTitle').textContent=t==='login'?'SIGN IN':'REGISTER';}
+async function doLogin(){
+  const email=document.getElementById('lEmail').value.trim();
+  const pass=document.getElementById('lPass').value;
+  if(!email||!pass){showFerr('lErr','Please fill in all fields');return;}
+  const btn=event.target;btn.disabled=true;btn.textContent='Signing in...';
+  try{
+    const d=await apiFetch('/api/auth/login',{method:'POST',body:JSON.stringify({email,password:pass})});
+    setUser(d);closeMo('authMo');renderBeats();renderPresets();showToast('Welcome back, '+d.user.name.split(' ')[0]+'!','ok');
+  }catch(e){showFerr('lErr', e.message);}
+  finally{btn.disabled=false;btn.textContent='SIGN IN';}
+}
+async function doReg(){
+  const name=document.getElementById('rName').value.trim();
+  const email=document.getElementById('rEmail').value.trim();
+  const pass=document.getElementById('rPass').value;
+  if(!name||!email||!pass){showFerr('rErr','Please fill in all fields');return;}
+  if(pass.length<8){showFerr('rErr','Password must be at least 8 characters');return;}
+  const btn=event.target;btn.disabled=true;btn.textContent='Creating account...';
+  try{
+    const d=await apiFetch('/api/auth/register',{method:'POST',body:JSON.stringify({name,email,password:pass})});
+    setUser(d);closeMo('authMo');renderBeats();renderPresets();showToast('Welcome, '+d.user.name.split(' ')[0]+'!','ok');
+  }catch(e){showFerr('rErr', e.message);}
+  finally{btn.disabled=false;btn.textContent='CREATE ACCOUNT';}
+}
+function setUser(d){token=d.token;user=d.user;localStorage.setItem('sk_tok',token);localStorage.setItem('sk_usr',JSON.stringify(user));updateUserUI();}
+function logout(){token=null;user=null;localStorage.removeItem('sk_tok');localStorage.removeItem('sk_usr');updateUserUI();document.getElementById('uDrop').classList.remove('open');renderBeats();renderPresets();showToast('Signed out');}
+function updateUserUI(){const on=!!user;document.getElementById('gBtns').style.display=on?'none':'';document.getElementById('uBtns').style.display=on?'':'none';if(on)document.getElementById('uName').textContent=user.name.split(' ')[0].toUpperCase();}
+function togDrop(){const d=document.getElementById('uDrop');d.classList.toggle('open');}
+
+async function openLibrary(){
+  if(!user){openAuth();return;}
+  closeMo('authMo');openMo('libMo');
+  document.getElementById('libBody').innerHTML='<div class="empty"><i class="fas fa-spinner fa-spin"></i></div>';
+  try{
+    const orders=await apiFetch('/api/orders/my');
+    const b=document.getElementById('libBody');
+    if(!orders.length){b.innerHTML='<div class="empty"><i class="fas fa-music"></i><p>No purchases yet</p></div>';return;}
+    b.innerHTML=orders.flatMap(o=>o.items.map(it=>`
+      <div class="li">
+        <div class="li-icon"><i class="fas fa-music"></i></div>
+        <div style="flex:1">
+          <div style="font-family:var(--fm);font-size:.8rem">${it.beatName}</div>
+          <div style="font-size:.68rem;color:var(--mu);font-family:var(--fm);margin-top:.2rem">${o.license.toUpperCase()} · ${o.payMethod.toUpperCase()}</div>
+          ${o.status==='pending'?'<div style="font-size:.68rem;color:var(--go);font-family:var(--fm)"><i class="fas fa-clock"></i> Pending verification</div>':o.status==='confirmed'?'<div style="font-size:.68rem;color:var(--gr);font-family:var(--fm)"><i class="fas fa-check"></i> Confirmed</div>':'<div style="font-size:.68rem;color:var(--ac)"><i class="fas fa-times"></i> Rejected</div>'}
+        </div>
+        <div style="font-size:.72rem;color:var(--mu)">${new Date(o.createdAt).toLocaleDateString()}</div>
+        ${o.status==='confirmed'?`<button class="btn btn-gh" style="padding:.4rem .75rem;font-size:.6rem" onclick="dlBeat('${it.beat}','${it.beatName}')"><i class="fas fa-download"></i></button>`:'<span style="font-family:var(--fm);font-size:.58rem;color:var(--go)">'+o.status+'</span>'}
+      </div>`)).join('');
+  }catch(e){document.getElementById('libBody').innerHTML='<div class="empty" style="color:var(--ac)">'+e.message+'</div>';}
+}
+function dlBeat(id,name){
+  fetch('/api/downloads/'+id,{headers:{Authorization:'Bearer '+token}})
+    .then(r=>{if(!r.ok)throw new Error('Download failed');return r.blob();})
+    .then(blob=>{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);})
+    .catch(e=>showToast(e.message,'err'));
+}
+
+let curSvcName='';
+function bookService(svc){curSvcName=svc;document.getElementById('svcTitle').textContent='BOOK — '+svc.toUpperCase();document.getElementById('sName').value=user?.name||'';document.getElementById('sEmail2').value=user?.email||'';document.getElementById('sMsg').value='';openMo('svcMo');}
+async function submitService(){
+  const name=document.getElementById('sName').value.trim();
+  const email=document.getElementById('sEmail2').value.trim();
+  const msg=document.getElementById('sMsg').value.trim();
+  if(!name||!email){showFerr('sErr','Name and email required');return;}
+  try{await apiFetch('/api/services',{method:'POST',body:JSON.stringify({name,email,service:curSvcName,message:msg})});closeMo('svcMo');showToast('Request sent! We will contact you soon.','ok');}
+  catch(e){showFerr('sErr',e.message);}
+}
+
+function cp(t){navigator.clipboard.writeText(t).then(()=>showToast('Copied!','ok')).catch(()=>showToast('Copy failed'));}
+function openMo(id){document.getElementById(id).classList.add('open');}
+function closeMo(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('click',e=>{
+  if(!document.getElementById('uMenu').contains(e.target))document.getElementById('uDrop').classList.remove('open');
+  if(e.target.classList.contains('mo'))closeMo(e.target.id);
+});
+function showFerr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
+function showToast(msg,type=''){const t=document.createElement('div');t.className='t '+type;t.textContent=msg;document.getElementById('toast').appendChild(t);setTimeout(()=>t.remove(),3500);}
+
+init();
+</script>
+</body>
+</html>

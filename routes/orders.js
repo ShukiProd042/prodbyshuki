@@ -1,30 +1,29 @@
-const router  = require('express').Router();
-const Order   = require('../models/Order');
-const Beat    = require('../models/Beat');
-const User    = require('../models/User');
+const router = require('express').Router();
+const Order  = require('../models/Order');
+const Beat   = require('../models/Beat');
+const User   = require('../models/User');
 const { authUser, authAdmin } = require('../middleware/auth');
-const { sendOrderConfirmed, sendOrderReceived, sendAdminNotification } = require('../middleware/email');
+const { sendAdminNotification, sendOrderReceived, sendOrderConfirmed } = require('../middleware/email');
 
-// POST /api/orders — user submits an order (after sending payment)
+const MULT = { lease: 1, premium: 1.8, exclusive: 5 };
+
+// POST /api/orders — submit order
 router.post('/', authUser, async (req, res) => {
   try {
     const { items, license, payMethod, txRef } = req.body;
-    // items = [{ beatId }]
     if (!items?.length || !license || !payMethod || !txRef)
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'All fields required' });
 
-    const user = await User.findById(req.user.id);
+    const user   = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // Fetch beats and compute total
-    const beats = await Beat.find({ _id: { $in: items.map(i => i.beatId) } });
+    const mult   = MULT[license] || 1;
+    const beats  = await Beat.find({ _id: { $in: items.map(i => i.beatId) }, status: 'active' });
     if (!beats.length) return res.status(400).json({ error: 'No valid beats found' });
 
-    const multipliers = { lease: 1, premium: 1.8, exclusive: 5 };
-    const mult  = multipliers[license] || 1;
-    const total = beats.reduce((sum, b) => sum + b.price * mult, 0);
+    const total  = beats.reduce((s, b) => s + b.price * mult, 0);
 
-    const order = await Order.create({
+    const order  = await Order.create({
       user:        user._id,
       userName:    user.name,
       userEmail:   user.email,
@@ -35,119 +34,80 @@ router.post('/', authUser, async (req, res) => {
       txRef
     });
 
-    // Send "received" email to buyer
-    await sendOrderReceived(order);
+    sendOrderReceived(order).catch(() => {});
+    sendAdminNotification(order).catch(() => {});
 
-    // Notify admin immediately
-    await sendAdminNotification(order);
-
-    res.status(201).json({ orderId: order._id, message: 'Order submitted. Awaiting payment verification.' });
-  } catch (err) {
+    res.status(201).json({ orderId: order._id, message: 'Order submitted' });
+  } catch(err) {
+    console.error('Order error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/orders/my — user gets their own orders
+// GET /api/orders/my
 router.get('/my', authUser, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user.id })
-      .populate('items.beat', 'name genre')
-      .sort({ createdAt: -1 });
+    const orders = await Order.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(orders);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  } catch(err) { res.status(500).json({ error: err.message }); }
 });
 
-// ── ADMIN ────────────────────────────────────────────────────
-
-// GET /api/orders/admin/all — all orders
-router.get('/admin/all', authAdmin, async (req, res) => {
-  try {
-    const { status } = req.query;
-    const filter = status ? { status } : {};
-    const orders = await Order.find(filter)
-      .populate('items.beat', 'name')
-      .sort({ createdAt: -1 });
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// GET /api/orders/admin/stats — dashboard numbers
+// GET /api/orders/admin/stats
 router.get('/admin/stats', authAdmin, async (req, res) => {
   try {
-    const [allOrders, users, beats] = await Promise.all([
+    const [orders, beatCount, userCount] = await Promise.all([
       Order.find(),
-      User.countDocuments(),
-      Beat.countDocuments({ status: 'active' })
+      Beat.countDocuments({ status: 'active' }),
+      User.countDocuments()
     ]);
-    const confirmed  = allOrders.filter(o => o.status === 'confirmed');
-    const pending    = allOrders.filter(o => o.status === 'pending');
-    const revenue    = confirmed.reduce((s, o) => s + o.totalAmount, 0);
+    const confirmed = orders.filter(o => o.status === 'confirmed');
+    const totalRevenue = confirmed.reduce((s, o) => s + o.totalAmount, 0);
+    const pendingOrders = orders.filter(o => o.status === 'pending').length;
 
-    // Monthly revenue for chart (last 12 months)
-    const monthly = {};
+    const monthlyRevenue = {};
     confirmed.forEach(o => {
-      const key = new Date(o.createdAt).toLocaleString('en', { month: 'short', year: '2-digit' });
-      monthly[key] = (monthly[key] || 0) + o.totalAmount;
+      const k = new Date(o.confirmedAt || o.createdAt).toLocaleString('en', { month: 'short', year: '2-digit' });
+      monthlyRevenue[k] = (monthlyRevenue[k] || 0) + o.totalAmount;
     });
 
-    res.json({
-      totalRevenue:    +revenue.toFixed(2),
-      totalOrders:     allOrders.length,
-      pendingOrders:   pending.length,
-      confirmedOrders: confirmed.length,
-      totalUsers:      users,
-      activeBeats:     beats,
-      monthlyRevenue:  monthly
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    res.json({ totalRevenue, activeBeats: beatCount, totalOrders: orders.length, totalUsers: userCount, pendingOrders, monthlyRevenue });
+  } catch(err) { res.status(500).json({ error: err.message }); }
 });
 
-// PUT /api/orders/admin/:id/confirm — admin confirms order, sends files
+// GET /api/orders/admin/all
+router.get('/admin/all', authAdmin, async (req, res) => {
+  try {
+    const q = {};
+    if (req.query.status) q.status = req.query.status;
+    const orders = await Order.find(q).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch(err) { res.status(500).json({ error: err.message }); }
+});
+
+// PUT /api/orders/admin/:id/confirm
 router.put('/admin/:id/confirm', authAdmin, async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate('items.beat');
+    const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: 'Order not found' });
-    if (order.status === 'confirmed')
-      return res.status(400).json({ error: 'Already confirmed' });
-
     order.status      = 'confirmed';
     order.confirmedAt = new Date();
     await order.save();
 
-    // If exclusive — mark beat as sold
     if (order.license === 'exclusive') {
-      await Beat.updateMany(
-        { _id: { $in: order.items.map(i => i.beat?._id || i.beat) } },
-        { status: 'sold' }
-      );
+      await Beat.updateMany({ _id: { $in: order.items.map(i => i.beat) } }, { status: 'sold' });
     }
 
-    // Send confirmation email to buyer with download link
-    await sendOrderConfirmed(order);
-
-    res.json({ message: 'Order confirmed and email sent to buyer.' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    sendOrderConfirmed(order).catch(() => {});
+    res.json({ message: 'Confirmed' });
+  } catch(err) { res.status(500).json({ error: err.message }); }
 });
 
 // PUT /api/orders/admin/:id/reject
 router.put('/admin/:id/reject', authAdmin, async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id, { status: 'rejected' }, { new: true }
-    );
-    if (!order) return res.status(404).json({ error: 'Order not found' });
-    res.json({ message: 'Order rejected.' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    await Order.findByIdAndUpdate(req.params.id, { status: 'rejected' });
+    res.json({ message: 'Rejected' });
+  } catch(err) { res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;

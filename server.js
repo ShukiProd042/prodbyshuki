@@ -5,18 +5,17 @@ const helmet   = require('helmet');
 const cors     = require('cors');
 const path     = require('path');
 
-const app = express();
+const app  = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/previews', express.static(path.join(__dirname, 'uploads/previews')));
 
-// Routes
 app.use('/api/auth',      require('./routes/auth'));
 app.use('/api/beats',     require('./routes/beats'));
 app.use('/api/orders',    require('./routes/orders'));
@@ -24,14 +23,20 @@ app.use('/api/downloads', require('./routes/downloads'));
 app.use('/api/users',     require('./routes/users'));
 app.use('/api/services',  require('./routes/services'));
 
-// Catch-all
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    app.listen(process.env.PORT || 5000, () =>
-      console.log(`🚀 Shuki Production running on http://localhost:${process.env.PORT || 5000}`)
-    );
-  })
-  .catch(err => { console.error('❌ MongoDB error:', err.message); process.exit(1); });
+// Start server FIRST — then connect MongoDB
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// Railway uses MONGO_URL, local uses MONGO_URI
+const MONGO = process.env.MONGO_URL || process.env.MONGOURL || process.env.MONGO_URI;
+
+if (!MONGO) {
+  console.error('❌ No MongoDB URI found! Set MONGO_URL in Railway Variables.');
+} else {
+  mongoose.connect(MONGO)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch(err => console.error('❌ MongoDB error:', err.message));
+}

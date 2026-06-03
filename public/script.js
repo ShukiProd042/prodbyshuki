@@ -594,21 +594,56 @@ init();
    ============================================================ */
 
 function initScrollAnimations() {
+
+  // Помошна функција — дали елементот е во Services секција
+  function isInServices(el) {
+    return el.closest('#services') !== null;
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
+      const el = entry.target;
+
       if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        // Не го отстранувај — нека остане видлив
+        // Елементот влегол → прикажи го
+        el.classList.remove('hidden');
+        el.classList.add('visible');
+      } else {
+        // Елементот излегол → скриј го (reverse анимација)
+        el.classList.remove('visible');
+        el.classList.add('hidden');
       }
     });
   }, {
-    threshold: 0.12,   // 12% видлив → активирај
-    rootMargin: '0px 0px -40px 0px'
+    threshold: 0.1,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  // Services секција — посебен observer со помал threshold
+  // за да се гледа подолго откаде доаѓаат елементите
+  const servicesObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const el = entry.target;
+      if (entry.isIntersecting) {
+        el.classList.remove('hidden');
+        el.classList.add('visible');
+      } else {
+        el.classList.remove('visible');
+        el.classList.add('hidden');
+      }
+    });
+  }, {
+    threshold: 0.05,          // Само 5% видлив → почни анимација
+    rootMargin: '0px 0px -20px 0px'
   });
 
   // Набљудувај ги сите анимирани елементи
   document.querySelectorAll('.anim-left, .anim-right, .anim-up, .anim-fade, .divider, .s-label').forEach(el => {
-    observer.observe(el);
+    if (isInServices(el)) {
+      servicesObserver.observe(el); // Services со посебен observer
+    } else {
+      observer.observe(el);
+    }
   });
 }
 

@@ -65,18 +65,23 @@ nav{
 /* ── Hero секција (почетна страна) ──────────────────────── */
 .hero{min-height:100vh;padding-top:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center}
 
-/* Студио слика во позадина */
+/* Студио слика — пулсирачки zoom */
 .hero-img{
   position:absolute;inset:0;
   background-image: url('https://images.unsplash.com/photo-1598653222000-6b7b7a552625?w=1920&q=85&auto=format&fit=crop');
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
-  transform:scale(1.05);
-  transition:transform 8s ease;
+  transform:scale(1.08);
+  animation: heroPulse 9s ease-in-out infinite;
   will-change:transform;
 }
-.hero-img.loaded{ transform:scale(1); } /* Кен Бернс ефект при вчитување */
+@keyframes heroPulse {
+  0%   { transform: scale(1.08); }
+  50%  { transform: scale(1.14); }
+  100% { transform: scale(1.08); }
+}
+.hero-img.loaded{ animation: heroPulse 9s ease-in-out infinite; }
 
 /* Градиент overlay врз сликата */
 .hero-bg{

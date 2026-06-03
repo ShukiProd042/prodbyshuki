@@ -647,44 +647,23 @@ function initScrollAnimations() {
   });
 }
 
-/* ── Services картички — посебен observer ────────────────
-   Следи scroll насока за правилен exit ефект           ── */
+/* ── Services картички — еднократна smooth анимација ─────
+   Се прикажуваат само еднаш кога ќе влезат во viewport  ── */
 function initServicesCards() {
-  const cards = document.querySelectorAll('.sc-from-left, .sc-from-right, .sc-from-bottom');
+  const cards = document.querySelectorAll('.sc-card');
   if (!cards.length) return;
 
-  let lastScrollY = window.scrollY;
-
   const observer = new IntersectionObserver((entries) => {
-    const currentScrollY = window.scrollY;
-    const scrollingDown  = currentScrollY > lastScrollY;
-    lastScrollY = currentScrollY;
-
     entries.forEach(entry => {
-      const el = entry.target;
-
       if (entry.isIntersecting) {
-        // Картичката влегува во viewport — прикажи ја
-        el.classList.remove('sc-exit');
-        // Мала пауза за да се ресетира transition пред visible
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.classList.add('sc-visible');
-          });
-        });
-      } else {
-        // Картичката излегува — exit нагоре
-        el.classList.remove('sc-visible');
-        el.classList.add('sc-exit');
-        // По транзицијата — врати ја на почетна позиција за повторен влез
-        setTimeout(() => {
-          el.classList.remove('sc-exit');
-        }, 700);
+        // Прикажи ја картичката — само еднаш
+        entry.target.classList.add('sc-visible');
+        observer.unobserve(entry.target); // Престани да ја следиш
       }
     });
   }, {
-    threshold: 0.08,
-    rootMargin: '0px 0px -30px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
   });
 
   cards.forEach(card => observer.observe(card));

@@ -1,36 +1,28 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const ADMIN_EMAIL = 'shundovskishuki1@gmail.com';
+const FROM_EMAIL  = 'Shuki Production <onboarding@resend.dev>';
 
-// Transporter со поддршка за двата порта
-function getTransporter() {
-  return nodemailer.createTransport({
-    service: 'gmail',   // Користи 'gmail' наместо рачен host/port
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
 }
 
-// Тест функција — се повикува при старт на серверот
+// Тест при старт на серверот
 async function testEmail() {
-  try {
-    const t = getTransporter();
-    await t.verify();
-    console.log('✅ Email service connected');
-  } catch(e) {
-    console.error('❌ Email service error:', e.message);
+  if (!process.env.RESEND_API_KEY) {
+    console.error('❌ RESEND_API_KEY not set!');
+    return;
   }
+  console.log('✅ Resend email service ready');
 }
 
-// Admin нотификација при нова нарачка
+// Email до Admin — нова нарачка
 async function sendAdminNotification(order) {
   try {
-    const t     = getTransporter();
-    const items = order.items.map(i => `• ${i.beatName} — $${i.price?.toFixed(2)}`).join('<br>');
-    await t.sendMail({
-      from:    `"Shuki Production" <${process.env.EMAIL_USER}>`,
+    const resend = getResend();
+    const items  = order.items.map(i => `• ${i.beatName} — $${i.price?.toFixed(2)}`).join('<br>');
+    await resend.emails.send({
+      from:    FROM_EMAIL,
       to:      ADMIN_EMAIL,
       subject: `🔔 New Order — $${order.totalAmount?.toFixed(2)} via ${order.payMethod?.toUpperCase()}`,
       html: `
@@ -58,9 +50,9 @@ async function sendAdminNotification(order) {
 // Email до купувачот — нарачката е примена
 async function sendOrderReceived(order) {
   try {
-    const t = getTransporter();
-    await t.sendMail({
-      from:    `"Shuki Production" <${process.env.EMAIL_USER}>`,
+    const resend = getResend();
+    await resend.emails.send({
+      from:    FROM_EMAIL,
       to:      order.userEmail,
       subject: '⏳ Order received — Shuki Production',
       html: `
@@ -85,12 +77,12 @@ async function sendOrderReceived(order) {
 // Email до купувачот — плаќањето е потврдено
 async function sendOrderConfirmed(order) {
   try {
-    const t     = getTransporter();
-    const items = order.items.map(i => `• ${i.beatName}`).join('<br>');
-    await t.sendMail({
-      from:    `"Shuki Production" <${process.env.EMAIL_USER}>`,
+    const resend = getResend();
+    const items  = order.items.map(i => `• ${i.beatName}`).join('<br>');
+    await resend.emails.send({
+      from:    FROM_EMAIL,
       to:      order.userEmail,
-      subject: '✅ Payment Confirmed — Your files are ready! — Shuki Production',
+      subject: '✅ Payment Confirmed — Your files are ready!',
       html: `
         <div style="font-family:Arial;background:#0a0a0a;color:#f0ece3;padding:40px;max-width:560px">
           <h2 style="color:#00c864">✅ Payment Confirmed!</h2>

@@ -647,6 +647,49 @@ function initScrollAnimations() {
   });
 }
 
+/* ── Services картички — посебен observer ────────────────
+   Следи scroll насока за правилен exit ефект           ── */
+function initServicesCards() {
+  const cards = document.querySelectorAll('.sc-from-left, .sc-from-right, .sc-from-bottom');
+  if (!cards.length) return;
+
+  let lastScrollY = window.scrollY;
+
+  const observer = new IntersectionObserver((entries) => {
+    const currentScrollY = window.scrollY;
+    const scrollingDown  = currentScrollY > lastScrollY;
+    lastScrollY = currentScrollY;
+
+    entries.forEach(entry => {
+      const el = entry.target;
+
+      if (entry.isIntersecting) {
+        // Картичката влегува во viewport — прикажи ја
+        el.classList.remove('sc-exit');
+        // Мала пауза за да се ресетира transition пред visible
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            el.classList.add('sc-visible');
+          });
+        });
+      } else {
+        // Картичката излегува — exit нагоре
+        el.classList.remove('sc-visible');
+        el.classList.add('sc-exit');
+        // По транзицијата — врати ја на почетна позиција за повторен влез
+        setTimeout(() => {
+          el.classList.remove('sc-exit');
+        }, 700);
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -30px 0px'
+  });
+
+  cards.forEach(card => observer.observe(card));
+}
+
 /* ── Hero паралакс при скрол ───────────────────────────── */
 function initParallax() {
   const hero  = document.querySelector('.hero-title');
@@ -699,6 +742,7 @@ function initHeroImage() {
 /* ── Стартувај сите анимации ───────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
+  initServicesCards();   // Посебни анимации за Services картички
   initParallax();
   initCounters();
   initHeroImage();

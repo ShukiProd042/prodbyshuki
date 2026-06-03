@@ -587,3 +587,84 @@ function showToast(msg, type = '') {
 
 /* ── Стартувај апликацијата ─────────────────────────────── */
 init();
+
+/* ============================================================
+   SCROLL АНИМАЦИИ — Intersection Observer
+   Елементите се прикажуваат при скрол
+   ============================================================ */
+
+function initScrollAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Не го отстранувај — нека остане видлив
+      }
+    });
+  }, {
+    threshold: 0.12,   // 12% видлив → активирај
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  // Набљудувај ги сите анимирани елементи
+  document.querySelectorAll('.anim-left, .anim-right, .anim-up, .anim-fade, .divider, .s-label').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+/* ── Hero паралакс при скрол ───────────────────────────── */
+function initParallax() {
+  const hero  = document.querySelector('.hero-title');
+  const heroBg = document.querySelector('.hero-bg');
+  if (!hero) return;
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y < window.innerHeight) {
+      hero.style.transform  = `translateY(${y * 0.2}px)`;
+      heroBg.style.transform = `translateY(${y * 0.15}px)`;
+    }
+  }, { passive: true });
+}
+
+/* ── Бројач анимација за About статистики ──────────────── */
+function animateCounter(el, target, duration = 1500) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { el.textContent = target + (el.dataset.suffix || ''); clearInterval(timer); return; }
+    el.textContent = Math.floor(start) + (el.dataset.suffix || '');
+  }, 16);
+}
+
+function initCounters() {
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el  = entry.target;
+        const val = parseInt(el.dataset.count);
+        if (val) animateCounter(el, val);
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.sn[data-count]').forEach(el => counterObserver.observe(el));
+}
+
+/* ── Hero слика — Ken Burns ефект ──────────────────────── */
+function initHeroImage() {
+  const img = document.getElementById('heroImg');
+  if (!img) return;
+  // Trigger Ken Burns при вчитување
+  setTimeout(() => img.classList.add('loaded'), 100);
+}
+
+/* ── Стартувај сите анимации ───────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initScrollAnimations();
+  initParallax();
+  initCounters();
+  initHeroImage();
+});

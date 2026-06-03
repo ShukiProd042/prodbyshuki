@@ -64,7 +64,27 @@ nav{
 
 /* ── Hero секција (почетна страна) ──────────────────────── */
 .hero{min-height:100vh;padding-top:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,#1f0a00,var(--bg) 70%)}
+
+/* Студио слика во позадина */
+.hero-img{
+  position:absolute;inset:0;
+  background-image: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1800&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  transform:scale(1.05);
+  transition:transform 8s ease;
+  will-change:transform;
+}
+.hero-img.loaded{ transform:scale(1); } /* Кен Бернс ефект при вчитување */
+
+/* Градиент overlay врз сликата */
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, rgba(8,8,8,.55) 0%, rgba(8,8,8,.3) 40%, rgba(8,8,8,.85) 100%),
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(31,10,0,.6) 0%, transparent 70%);
+}
 .hero-c{position:relative;z-index:2;padding:2rem}
 .hero-tag{display:inline-block;font-family:var(--fm);font-size:.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--ac);border:1px solid var(--ac);padding:.3rem .8rem;margin-bottom:2rem;animation:fu .8s both}
 .hero-title{font-family:var(--fd);font-size:clamp(4rem,14vw,12rem);line-height:.95;letter-spacing:4px;animation:fu .8s .15s both}
@@ -274,4 +294,117 @@ footer{padding:3rem 2rem;border-top:1px solid var(--bd);display:flex;justify-con
   .nav-links{display:none}                   /* Скриј навигациски линкови */
   .about-in{grid-template-columns:1fr;gap:2rem}  /* Еден столб на мобилни */
   #cBar{width:100%}                           /* Кошничка на цел екран */
+}
+
+/* ============================================================
+   SCROLL АНИМАЦИИ
+   ============================================================ */
+
+/* Базна состојба — скриени пред анимација */
+.anim-left,
+.anim-right,
+.anim-up,
+.anim-fade {
+  opacity: 0;
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+/* Почетни позиции */
+.anim-left  { transform: translateX(-60px); }
+.anim-right { transform: translateX(60px); }
+.anim-up    { transform: translateY(50px); }
+.anim-fade  { transform: scale(.96); }
+
+/* Кога елементот е видлив — се активира */
+.anim-left.visible,
+.anim-right.visible,
+.anim-up.visible,
+.anim-fade.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Доцнење за секвенцијален ефект */
+.delay-1 { transition-delay: .1s }
+.delay-2 { transition-delay: .2s }
+.delay-3 { transition-delay: .3s }
+.delay-4 { transition-delay: .4s }
+.delay-5 { transition-delay: .5s }
+
+/* Beat картички — hover ефект подобрен */
+.beat-card {
+  transition: border-color .2s, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+}
+.beat-card:hover {
+  box-shadow: 0 8px 40px rgba(255,60,0,.12);
+}
+
+/* Service картички анимација */
+.sc {
+  transition: border-color .3s, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+}
+.sc:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(201,168,76,.1);
+}
+
+/* Stat boxes анимација */
+.sb {
+  transition: border-color .3s, transform .3s;
+}
+.sb:hover {
+  border-color: var(--ac);
+  transform: translateY(-3px);
+}
+
+/* Hero паралакс ефект */
+.hero-title {
+  will-change: transform;
+}
+
+/* Секција лабела — underline ефект */
+.s-label::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 1px;
+  background: var(--ac);
+  transition: width .8s ease;
+  margin-top: 4px;
+}
+.s-label.visible::after {
+  width: 100%;
+}
+
+/* Пулсирачка точка за hero тагот */
+.hero-tag::before {
+  content: '●';
+  margin-right: .5rem;
+  color: var(--ac);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .2; }
+}
+
+/* Filters hover shimmer */
+.fb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,60,0,.1), transparent);
+  transform: translateX(-100%);
+  transition: transform .4s;
+}
+.fb { position: relative; overflow: hidden; }
+.fb:hover::after { transform: translateX(100%); }
+
+/* Smooth section reveal line */
+.divider {
+  transition: width .8s .3s ease;
+  width: 0;
+}
+.divider.visible {
+  width: 48px;
 }

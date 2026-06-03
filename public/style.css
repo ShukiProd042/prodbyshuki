@@ -68,7 +68,7 @@ nav{
 /* Студио слика во позадина */
 .hero-img{
   position:absolute;inset:0;
-  background-image: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1800&q=80&auto=format&fit=crop');
+  background-image: url('https://images.unsplash.com/photo-1598653222000-6b7b7a552625?w=1920&q=85&auto=format&fit=crop');
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
@@ -407,4 +407,170 @@ footer{padding:3rem 2rem;border-top:1px solid var(--bd);display:flex;justify-con
 }
 .divider.visible {
   width: 48px;
+}
+
+/* ============================================================
+   ABOUT SHUKI — Информациска секција
+   ============================================================ */
+.about-shuki{
+  padding:7rem 2rem;
+  background:var(--bg);
+  border-top:1px solid var(--bd);
+  position:relative;
+  overflow:hidden;
+}
+/* Декоративна линија во позадина */
+.about-shuki::before{
+  content:'';
+  position:absolute;
+  left:50%;top:0;bottom:0;
+  width:1px;
+  background:linear-gradient(180deg,transparent,var(--bd) 20%,var(--bd) 80%,transparent);
+  opacity:.4;
+}
+.about-shuki-inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;
+  align-items:center;
+  position:relative;
+}
+
+/* Лева страна — текст */
+.as-left .as-eyebrow{
+  font-family:var(--fm);font-size:.65rem;letter-spacing:4px;
+  text-transform:uppercase;color:var(--ac);margin-bottom:1.25rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.as-left .as-eyebrow::before{
+  content:'';display:block;width:32px;height:1px;background:var(--ac);
+}
+.as-title{
+  font-family:var(--fd);font-size:clamp(2.5rem,4vw,4rem);
+  letter-spacing:2px;line-height:1;margin-bottom:1.75rem;
+}
+.as-title span{color:var(--ac)}
+.as-body{
+  color:var(--mu);line-height:1.85;font-size:.95rem;margin-bottom:2rem;
+}
+.as-tags{
+  display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2.5rem;
+}
+.as-tag{
+  font-family:var(--fm);font-size:.6rem;letter-spacing:2px;
+  text-transform:uppercase;padding:.35rem .85rem;border-radius:2px;
+  background:rgba(255,60,0,.08);color:var(--ac);
+  border:1px solid rgba(255,60,0,.2);
+}
+
+/* Info grid — основни информации */
+.as-info-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  margin-bottom:2.5rem;border:1px solid var(--bd);
+}
+.as-info-item{
+  padding:1.25rem 1.5rem;background:var(--s);
+  border-right:1px solid var(--bd);
+}
+.as-info-item:nth-child(even){border-right:none}
+.as-info-item:nth-child(n+3){border-top:1px solid var(--bd)}
+.as-info-label{
+  font-family:var(--fm);font-size:.55rem;letter-spacing:3px;
+  text-transform:uppercase;color:var(--mu);margin-bottom:.4rem;
+}
+.as-info-val{
+  font-family:var(--fd);font-size:1.2rem;letter-spacing:1px;
+}
+
+/* Social линкови */
+.as-socials{display:flex;gap:.75rem;flex-wrap:wrap;}
+.as-soc{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--fm);font-size:.65rem;letter-spacing:2px;
+  text-transform:uppercase;text-decoration:none;
+  padding:.6rem 1.2rem;border-radius:2px;
+  border:1px solid var(--bd);color:var(--mu);
+  transition:all .3s;
+}
+.as-soc:hover{color:var(--tx);border-color:var(--ac);background:rgba(255,60,0,.08);}
+.as-soc.yt:hover{border-color:#ff0000;color:#ff4444;background:rgba(255,0,0,.08);}
+.as-soc.ig:hover{border-color:#e1306c;color:#e1306c;background:rgba(225,48,108,.08);}
+
+/* Десна страна — визуелен елемент */
+.as-right{position:relative;}
+.as-visual{
+  background:var(--s);border:1px solid var(--bd);
+  padding:2.5rem;position:relative;overflow:hidden;
+}
+.as-visual::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--ac),var(--go));
+}
+.as-big-num{
+  font-family:var(--fd);font-size:8rem;line-height:1;
+  color:rgba(255,60,0,.06);position:absolute;
+  top:1rem;right:1.5rem;letter-spacing:-4px;
+  pointer-events:none;user-select:none;
+}
+.as-feat-list{display:flex;flex-direction:column;gap:.75rem;}
+.as-feat{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem 1.25rem;background:var(--s2);
+  border:1px solid var(--bd);border-radius:2px;
+  transition:border-color .2s,transform .2s;
+}
+.as-feat:hover{border-color:var(--ac);transform:translateX(4px);}
+.as-feat-icon{
+  width:36px;height:36px;border-radius:2px;flex-shrink:0;
+  background:rgba(255,60,0,.1);border:1px solid rgba(255,60,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ac);font-size:.9rem;
+}
+.as-feat-text{}
+.as-feat-title{font-family:var(--fm);font-size:.7rem;letter-spacing:1px;margin-bottom:.2rem;}
+.as-feat-sub{font-size:.8rem;color:var(--mu);}
+
+/* ── Подобрен Footer ────────────────────────────────────── */
+.footer-new{
+  padding:4rem 2rem 2rem;
+  border-top:1px solid var(--bd);
+  background:var(--s);
+}
+.footer-top{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr;
+  gap:3rem;padding-bottom:3rem;
+  border-bottom:1px solid var(--bd);margin-bottom:2rem;
+}
+.footer-brand .fl{font-family:var(--fd);font-size:1.5rem;letter-spacing:3px;display:block;margin-bottom:.75rem;}
+.footer-brand .fl span{color:var(--ac)}
+.footer-brand p{color:var(--mu);font-size:.85rem;line-height:1.7;max-width:280px;}
+.footer-col h4{font-family:var(--fm);font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--mu);margin-bottom:1.25rem;}
+.footer-col a{
+  display:block;color:var(--mu);text-decoration:none;
+  font-size:.85rem;margin-bottom:.6rem;
+  transition:color .2s;
+}
+.footer-col a:hover{color:var(--ac);}
+.footer-soc{display:flex;gap:.75rem;margin-top:1.25rem;}
+.footer-soc a{
+  width:36px;height:36px;border-radius:2px;
+  border:1px solid var(--bd);display:flex;align-items:center;
+  justify-content:center;color:var(--mu);text-decoration:none;
+  font-size:.9rem;transition:all .2s;
+}
+.footer-soc a:hover{color:var(--tx);border-color:var(--ac);background:rgba(255,60,0,.1);}
+.footer-bottom{
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-bottom .fc{font-family:var(--fm);font-size:.6rem;color:var(--mu);letter-spacing:2px;}
+
+@media(max-width:768px){
+  .about-shuki-inner{grid-template-columns:1fr;gap:3rem;}
+  .about-shuki::before{display:none;}
+  .footer-top{grid-template-columns:1fr;gap:2rem;}
 }

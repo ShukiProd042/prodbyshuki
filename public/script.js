@@ -647,26 +647,71 @@ function initScrollAnimations() {
   });
 }
 
-/* ── Services картички — еднократна smooth анимација ─────
-   Се прикажуваат само еднаш кога ќе влезат во viewport  ── */
-function initServicesCards() {
-  const cards = document.querySelectorAll('.sc-card');
-  if (!cards.length) return;
+/* ══════════════════════════════════════════════════════════
+   3D STACK CARDS — Services секција
+   Scroll-driven анимација со 3D perspective
+   ══════════════════════════════════════════════════════════ */
+let stackCurrentIdx = 0;
+const STACK_TOTAL   = 4;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // Прикажи ја картичката — само еднаш
-        entry.target.classList.add('sc-visible');
-        observer.unobserve(entry.target); // Престани да ја следиш
-      }
-    });
-  }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
+function initServicesCards() {
+  const wrap = document.querySelector('.stack-scroll-wrap');
+  if (!wrap) return;
+
+  // Почетна состојба
+  goCard(0, false);
+
+  // Scroll listener
+  window.addEventListener('scroll', onStackScroll, { passive: true });
+}
+
+function onStackScroll() {
+  const wrap = document.querySelector('.stack-scroll-wrap');
+  if (!wrap) return;
+
+  const rect    = wrap.getBoundingClientRect();
+  const total   = wrap.offsetHeight - window.innerHeight;
+  const scrolled = -rect.top;
+
+  // Не прави ништо ако не сме во services секцијата
+  if (scrolled < 0 || scrolled > total + 50) return;
+
+  // Пресметај кој card треба да е активен
+  const progress = Math.max(0, Math.min(1, scrolled / total));
+  const newIdx   = Math.min(STACK_TOTAL - 1, Math.floor(progress * STACK_TOTAL));
+
+  // Прикажи/скриј scroll hint
+  const hint = document.getElementById('stackHint');
+  if (hint) hint.classList.toggle('hidden', scrolled > 80);
+
+  if (newIdx !== stackCurrentIdx) {
+    goCard(newIdx);
+  }
+}
+
+function goCard(idx, animate = true) {
+  stackCurrentIdx = idx;
+  const cards = document.querySelectorAll('.svc-card');
+  const dots  = document.querySelectorAll('.sdot');
+
+  cards.forEach((card, i) => {
+    const diff = i - idx;
+    if (i < idx) {
+      // Картичка е помината — exit нагоре
+      card.dataset.state = 'exit';
+    } else if (diff === 0) {
+      card.dataset.state = 'active';
+    } else if (diff === 1) {
+      card.dataset.state = 'behind-1';
+    } else if (diff === 2) {
+      card.dataset.state = 'behind-2';
+    } else {
+      card.dataset.state = 'behind-3';
+    }
   });
 
-  cards.forEach(card => observer.observe(card));
+  // Ажурирај dots
+  dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
 }
 
 /* ── Hero паралакс при скрол ───────────────────────────── */

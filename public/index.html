@@ -68,16 +68,119 @@
   </div>
 </section>
 
+<!-- SERVICES — 3D Stack Cards -->
 <section id="services">
   <div class="container">
-    <div class="s-header"><div class="s-label anim-up">// 03 — Professional</div><h2 class="s-title anim-up delay-2">SERVICES</h2><div class="divider"></div></div>
-    <div class="sg">
-      <div class="sc sc-card sc-card-from-left sc-card-d1"><div class="si"><i class="fas fa-sliders-h"></i></div><div class="st">Mix & Master</div><div class="sd">Professional mixing and mastering for your tracks. Industry-standard sound, ready for streaming platforms.</div><div class="sp">STARTING AT $49.99</div><div style="flex:1"></div><button class="btn btn-go" style="margin-top:1.5rem" onclick="bookService('Mix & Master')">Book Now</button></div>
-      <div class="sc sc-card sc-card-from-bottom sc-card-d2"><div class="si"><i class="fas fa-drum"></i></div><div class="st">Beat Making</div><div class="sd">Custom beat creation tailored to your style and vision. Exclusive rights included.</div><div class="sp">STARTING AT $79.99</div><div style="flex:1"></div><button class="btn btn-go" style="margin-top:1.5rem" onclick="bookService('Custom Beat')">Book Now</button></div>
-      <div class="sc sc-card sc-card-from-bottom sc-card-d3"><div class="si"><i class="fas fa-microphone-alt"></i></div><div class="st">Vocal Production</div><div class="sd">Complete vocal production including tuning, layering, and effects processing.</div><div class="sp">STARTING AT $39.99</div><div style="flex:1"></div><button class="btn btn-go" style="margin-top:1.5rem" onclick="bookService('Vocal Production')">Book Now</button></div>
-      <div class="sc sc-card sc-card-from-right sc-card-d4"><div class="si"><i class="fas fa-compact-disc"></i></div><div class="st">Full EP Package</div><div class="sd">Production, mixing and mastering for a full EP (up to 7 tracks). Best value package.</div><div class="sp">STARTING AT $249.99</div><div style="flex:1"></div><button class="btn btn-go" style="margin-top:1.5rem" onclick="bookService('EP Package')">Book Now</button></div>
+    <div class="s-header">
+      <div class="s-label anim-up">// 03 — Professional</div>
+      <h2 class="s-title anim-up delay-2">SERVICES</h2>
+      <div class="divider"></div>
     </div>
   </div>
+
+  <!-- Sticky scroll container -->
+  <div class="stack-scroll-wrap">
+    <div class="stack-sticky">
+
+      <!-- 3D Card Stack -->
+      <div class="stack-scene">
+        <div class="stack-deck" id="stackDeck">
+
+          <div class="svc-card" data-idx="0">
+            <div class="svc-card-inner">
+              <div class="svc-card-top">
+                <div class="svc-icon"><i class="fas fa-sliders-h"></i></div>
+                <span class="svc-num">01</span>
+              </div>
+              <h3 class="svc-title">Mix & Master</h3>
+              <p class="svc-desc">Professional mixing and mastering for your tracks. Industry-standard sound, ready for all streaming platforms.</p>
+              <div class="svc-price">Starting at <strong>$49.99</strong></div>
+              <ul class="svc-list">
+                <li><i class="fas fa-check"></i> Stereo Mix</li>
+                <li><i class="fas fa-check"></i> Mastering</li>
+                <li><i class="fas fa-check"></i> 2 Revisions</li>
+                <li><i class="fas fa-check"></i> WAV + MP3 Delivery</li>
+              </ul>
+              <button class="btn btn-go svc-btn" onclick="bookService('Mix & Master')">Book Now <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <div class="svc-card" data-idx="1">
+            <div class="svc-card-inner">
+              <div class="svc-card-top">
+                <div class="svc-icon"><i class="fas fa-drum"></i></div>
+                <span class="svc-num">02</span>
+              </div>
+              <h3 class="svc-title">Beat Making</h3>
+              <p class="svc-desc">Custom beat creation tailored to your style and vision. You get full exclusive rights to the final beat.</p>
+              <div class="svc-price">Starting at <strong>$79.99</strong></div>
+              <ul class="svc-list">
+                <li><i class="fas fa-check"></i> Custom Production</li>
+                <li><i class="fas fa-check"></i> Exclusive Rights</li>
+                <li><i class="fas fa-check"></i> Stems Included</li>
+                <li><i class="fas fa-check"></i> Unlimited Revisions</li>
+              </ul>
+              <button class="btn btn-go svc-btn" onclick="bookService('Custom Beat')">Book Now <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <div class="svc-card" data-idx="2">
+            <div class="svc-card-inner">
+              <div class="svc-card-top">
+                <div class="svc-icon"><i class="fas fa-microphone-alt"></i></div>
+                <span class="svc-num">03</span>
+              </div>
+              <h3 class="svc-title">Vocal Production</h3>
+              <p class="svc-desc">Complete vocal production including pitch correction, layering, harmonies and full effects processing.</p>
+              <div class="svc-price">Starting at <strong>$39.99</strong></div>
+              <ul class="svc-list">
+                <li><i class="fas fa-check"></i> Pitch Correction</li>
+                <li><i class="fas fa-check"></i> Harmonies & Layers</li>
+                <li><i class="fas fa-check"></i> Vocal Effects</li>
+                <li><i class="fas fa-check"></i> 2 Revisions</li>
+              </ul>
+              <button class="btn btn-go svc-btn" onclick="bookService('Vocal Production')">Book Now <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <div class="svc-card" data-idx="3">
+            <div class="svc-card-inner">
+              <div class="svc-card-top">
+                <div class="svc-icon"><i class="fas fa-compact-disc"></i></div>
+                <span class="svc-num">04</span>
+              </div>
+              <h3 class="svc-title">Full EP Package</h3>
+              <p class="svc-desc">Full production, mixing and mastering for a complete EP. Up to 7 tracks — the best value package we offer.</p>
+              <div class="svc-price">Starting at <strong>$249.99</strong></div>
+              <ul class="svc-list">
+                <li><i class="fas fa-check"></i> Up to 7 Tracks</li>
+                <li><i class="fas fa-check"></i> Full Production</li>
+                <li><i class="fas fa-check"></i> Mix & Master Included</li>
+                <li><i class="fas fa-check"></i> Priority Support</li>
+              </ul>
+              <button class="btn btn-go svc-btn" onclick="bookService('EP Package')">Book Now <i class="fas fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+        </div><!-- /stack-deck -->
+      </div><!-- /stack-scene -->
+
+      <!-- Progress dots -->
+      <div class="stack-dots" id="stackDots">
+        <div class="sdot active" onclick="goCard(0)"></div>
+        <div class="sdot" onclick="goCard(1)"></div>
+        <div class="sdot" onclick="goCard(2)"></div>
+        <div class="sdot" onclick="goCard(3)"></div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="stack-hint" id="stackHint">
+        <span>Scroll to explore</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+
+    </div><!-- /stack-sticky -->
+  </div><!-- /stack-scroll-wrap -->
 </section>
 
 <!-- ABOUT SHUKI SECTION -->
